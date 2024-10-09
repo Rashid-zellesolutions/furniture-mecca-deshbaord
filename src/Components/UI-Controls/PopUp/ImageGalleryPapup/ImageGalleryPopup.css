@@ -1,0 +1,406 @@
+.image-gallery-pop-up-main-container{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%);
+    z-index: 9999999999;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid #ddd;
+}
+
+.image-gallery-pop-up-main-container.show-image-gallery-pop-up{
+    display: flex;
+}
+
+.image-gallery-inner-container{
+    display: flex !important;
+    flex-direction: column !important;
+    width: 90%;
+    height: 90%;
+    position: relative;
+    padding: 25px;
+    gap: 10px;
+    background-color: #fff;
+}
+
+.close-modal{
+    position: absolute;
+    top: 28px;
+    right: 25px;
+    font-size: 22px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+/* Image Gallery heading */
+
+.image-gallery-head-section{
+    display: flex;
+    width: 100%;
+}
+
+.image-gallery-heading{
+    margin: 0;
+    font-size: var(--font-heading-size);
+    font-weight: var(--font-weight-semi-bold);
+    line-height: var(--line-height-28);
+    color: #000;
+}
+
+/* image gallery main containt */
+.image-gallery-main-containt-section{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.image-gallery-tabs-select{
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    
+
+}
+
+.image-gallery-tab{
+    height: max-content;
+    width: max-content;
+    background-color: transparent;
+    border: none;
+    padding: 15px 10px;
+    font-size: var(--font-15);
+    line-height: var(--line-height-22);
+    font-weight: var(--font-weight-regular);
+    cursor: pointer;
+    transition: border 0.3s ease; 
+}
+
+.image-gallery-tab.active {
+    border-color: var(--border-color); /* Selected tab color */
+    border-top: 2px solid var(--border-color);
+    border-right: 2px solid var(--border-color);
+    border-left: 2px solid var(--border-color);
+    border-bottom: 1px solid white; /* Hide bottom border for active tab */
+    background: white; 
+}
+
+.content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.content-item {
+    display: none; /* Hide all content items initially */
+    width: 100%;
+}
+
+.content-item.active {
+    display: flex; /* Show the active content item */
+}
+
+/* upload image */
+.upload-images-main-container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.upload-image-icon-div{
+    padding: 27px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dotted #595959;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* image Gallery Section */
+.image-gallery{
+    display: flex;
+    width: 100%;
+    /* gap: 10px; */
+}
+
+.image-gallery-select-images-section{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: auto;
+    padding: 25px 0;
+}
+
+.image-gallery-filter-section{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+.image-gallery-filter-section h3{
+    margin: 0;
+    font-size: var(--font-15);
+    line-height: var(--line-height-22);
+    font-weight: var(--font-weight-semi-bold);
+}
+
+.image-gallery-filter-dropdown-section{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: center;
+    justify-content: start;
+}
+
+.image-gallery-filter{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+
+}
+
+
+
+.image-gallery-filter-name{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.image-gallery-filter-name p{
+    margin: 0;
+}
+
+.image-gallery-dropdown{
+    display: flex;
+    flex-direction: column;
+    width:-webkit-fill-available;
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background-color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+.image-gallery-dropdown.show-filters{
+    height: 105px;
+    border: 1px solid var(--border-color);
+}
+
+.image-gallery-dropdown p{
+    margin: 0;
+    padding: 5px 10px;
+}
+
+.image-gallery-dropdown p:hover{
+    background-color: #988e8e;
+    color: #fff;
+}
+
+.images-gallery-and-detail-section{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+
+}
+
+.image-gallery-section{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+    height: 335px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Custom scrollbar for WebKit browsers (Chrome, Safari) */
+.image-gallery-section::-webkit-scrollbar {
+    width: 8px; /* Adjust the width of the scrollbar */
+    background: #f0f0f0; /* Background of the scrollbar */
+}
+
+.image-gallery-section::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar thumb */
+    border-radius: 4px; /* Optional: round the corners */
+}
+
+.image-gallery-section::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color on hover */
+}
+
+.image-gallery-section img{
+    margin: 5px; 
+    height: 120px; /* Maintain aspect ratio */
+    width: auto;
+    max-width: 180px; /* Responsive */
+    cursor: pointer;
+}
+
+
+
+
+
+
+/* Image detal and edit section */
+.images-containt-section{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height: 395px;
+    background-color: var(--main-background-color);
+    padding: 30px 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    gap: 10px;
+}
+
+/* Custom scrollbar for WebKit browsers (Chrome, Safari) */
+.images-containt-section::-webkit-scrollbar {
+    width: 8px; /* Adjust the width of the scrollbar */
+    background: #f0f0f0; /* Background of the scrollbar */
+}
+
+.images-containt-section::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar thumb */
+    border-radius: 4px; /* Optional: round the corners */
+}
+
+.images-containt-section::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color on hover */
+}
+
+.edit-image-container{
+    width: auto;
+    height: 120px;
+    max-width: 180px;
+    margin-bottom: 10px;
+}
+
+.edit-image-container img{
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.image-details-section{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 5px;
+}
+
+.image-details-section h3{
+    margin: 0;
+    font-size: var(--font-size-medium);
+    line-height: 16px;
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--secondry-text-color);
+}
+
+.image-details-section p{
+    margin: 0;
+    color: var(--secondry-text-color);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-medium);
+    line-height: 16px;
+}
+
+.edit-and-delete-image-section{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.edit-and-delete-image-section button{
+    background-color: transparent;
+    width: max-content;
+    border: none;
+    outline: none;
+}
+
+.edit-image-button{
+    color: var(--primary-color);
+    text-decoration: underline;
+    font-size: var(--font-size-medium);
+    line-height: 16px;
+    font-weight: var(--font-weight-medium);
+    padding: 0;
+    cursor: pointer;
+}
+
+.delete-image-button{
+    color: #C61B1A;
+    padding: 0;
+    font-size: var(--font-size-medium);
+    font-weight: var(--font-weight-medium);
+    line-height: 16px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.image-gallery-inputs{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+
+/* image gallery modal footer */
+.image-gallery-modal-footer{
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: var(--tbl-header-color);
+    border-top: 1px solid var(--border-color);
+    width: -webkit-fill-available;
+    padding: 22px 20px;
+}
+
+.add-to-gallery-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    height: max-content;
+    padding: 7px 20px;
+    background-color: var(--primary-color);
+    box-sizing: border-box;
+    border: 1px solid var(--primary-color);
+    color: #fff;
+    border-radius: 3px;
+    font-size: var(--font-15);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-22);
+    cursor: pointer;
+}
+
