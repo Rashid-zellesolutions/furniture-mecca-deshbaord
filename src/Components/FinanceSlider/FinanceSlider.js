@@ -1,16 +1,13 @@
 import React, {useState, useEffect} from 'react'
-import './HomePageSlider.css'
-import axios from 'axios';
+import './FinanceSlider.css'
+import CMSHead from '../UI-Controls/CMSHead/CMSHead'
+import CMSBody from '../CMSBody/CMSBody'
+import ImageGalleryPopup from '../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup'
+import InfoPopUp from '../InfoPopUp/InfoPopUp'
+import axios from 'axios'
 
-// icons
-import CMSMain from '../CMSMain/CMSMain';
-import CMSHead from '../UI-Controls/CMSHead/CMSHead';
-import CMSBody from '../CMSBody/CMSBody';
-import ImageGalleryPopup from '../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup';
-import InfoPopUp from '../InfoPopUp/InfoPopUp';
-
-const HomePageSlider = () => {
-  const [modalView, setModalView] = useState(false);
+const FinanceSlider = () => {
+    const [modalView, setModalView] = useState(false);
   const [selectedImage, setSelectedImage] = useState([])
   const [deletedImagesIds, setDeletedImagesIds] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -65,9 +62,9 @@ const HomePageSlider = () => {
     }
   };
   return (
-        <div className='SlderMainSection'>
+    <div className='FinanceSlider'>
         <CMSHead
-          heading={'Home Page Slider'}
+          heading={'Finance Slider'}
           buttonText={'Save'}
           sendImagesHomeSlider={sendImagesHomeSlider}
           handeShowInfoModal={handeShowInfoModal}
@@ -88,9 +85,8 @@ const HomePageSlider = () => {
           showInfoModal={infoModal}
           handleCloseInfoModal={handleCloseInfoModal} 
         />
-      </div>
+    </div>
   )
 }
 
-export default HomePageSlider
-
+export default FinanceSlider

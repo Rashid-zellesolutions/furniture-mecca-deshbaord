@@ -29,7 +29,7 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
     const [images, setImages] = useState([]);
     const fileInputRef = useRef(null)
     const [uploadedStatus, setUploadedStates] = useState('');
-    const [selectedImage, setSelectedImage] = useState(null)
+    const [selectedImage, setSelectedImage] = useState([])
     const [selectedImageId, setSelectedImageId] = useState()
     const [isEditAble, setIsEditAble] = useState(false);
     const [data, setData] = useState([])
@@ -39,13 +39,19 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
         title: '',
         description: '',
     })
+    const [formData, setFormData] = useState({
+        alt_text: '',
+        title: '',
+        description: '',
+        image_url: ''
+    });
 
     // Get data from api
     const getGalleyImages = async () => {
         try {
             const response = await axios.get('https://fm.skyhub.pk/api/v1/media/pages/home/slider/get');
             setData(response.data.homeSliders)
-            console.log("response", response)
+            console.log("response", response.data.homeSliders)
         } catch (error) {
             console.log(error);
         }
@@ -55,37 +61,54 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
     }, [])
 
     // Post Slider Image
+    const [imageSendPayload, setImageSendPayload] = useState({
+        file: null,
+        alt_text: '',
+        title: '',
+        description: '',
+    })
+    const handleImageUploadChange = (event) => {
+        const {name, value} = event.target;
+        setImageSendPayload((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }))
+    }
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
-        const apiEndPont = `${url}/api/v1/media/pages/home/slider/add`
-        if(file) {
-            setUploadedStates('uploading....')
-            alert('wait')
-            await uploadImage(file, apiEndPont, setUploadedStates);
+        const api = `${url}/api/v1/media/pages/home/slider/add`
+
+        if(file){
+            setImageSendPayload((prevData) => ({
+                ...prevData,
+                file: file,
+            }));
+            setUploadedStates('loading');
+            alert('wait');
+            const imagePayloadToSend = new FormData();
+            imagePayloadToSend.append('image', file);
+            imagePayloadToSend.append('alt_text', imageSendPayload.alt_text);
+            imagePayloadToSend.append('title', imageSendPayload.title);
+            imagePayloadToSend.append('description', imageSendPayload.description);
+
+            await uploadImage(imagePayloadToSend, api, setUploadedStates)
+
         }
-        console.log('handleChange Image', file);
+        console.log("handleChange file", file);
     }
 
+    
     // Update Images Data
     const handleSelectedImage = (item) => {
         setSelectedImage(item)
         setSelectedImageId(item._id)
         onImageSelect(item);
+        console.log("selected image", item)
     };
     const handleChane = (e) => {
         const {name , value} = e.target;
         setUpdateData({...updateData, [name]: value})
     };
-    // const handleSubmit = async () => {
-    //     try {
-    //         await axios.put(`https://fm.skyhub.pk/api/v1/media/pages/home/slider/${selectedImageId}`, updateData);
-    //         console.log("Data updated successfully", updateData);
-    //         alert("data updated")
-    //     } catch (error) {
-    //         console.error("error updating data", error);
-    //         alert("failed to update data")
-    //     }
-    // }
 
     const handleSubmit = async () => {
         const hasUpdate = Object.values(updateData).some(field => field != '');
@@ -116,9 +139,9 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
     ]; 
 
     const imageEditInputData = [
-        {label: 'Alternate Text', placeholder: 'Text', value: selectedImage ? selectedImage.alt_text : '' , name: 'alt_text'},
-        {label: 'Title', placeholder: 'Title', value: selectedImage ? selectedImage.title : '' , name: 'title'},
-        {label: 'Description', placeholder: 'Description', value: selectedImage ? selectedImage.description : '' , name: 'description'},
+        {label: 'Alternate Text', placeholder: 'Text', value: selectedImage ? selectedImage.alt_text : '' , val: imageSendPayload.alt_text , name: 'alt_text'},
+        {label: 'Title', placeholder: 'Title', value: selectedImage ? selectedImage.title : '' , val: imageSendPayload.title , name: 'title'},
+        {label: 'Description', placeholder: 'Description', value: selectedImage ? selectedImage.description : '' , val: imageSendPayload.description , name: 'description'},
         {label: 'Url', placeholder: 'url', value: selectedImage ? selectedImage.image_url : '' ,}
     ]
 
@@ -284,10 +307,9 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
                                             lineHeight={'18px'}
                                             type={'text'}
                                             placeholder={items.placeholder}
-                                            value={items.value}
+                                            value={items.val}
                                             name={items.name}
-                                            onChange={handleChane}
-                                            // readOnly={isEditAble}
+                                            onChange={handleImageUploadChange}
                                         />
                                     ))}
                                 </div>

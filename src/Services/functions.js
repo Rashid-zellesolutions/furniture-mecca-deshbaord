@@ -1,20 +1,14 @@
 // Slider Image Upload Function
 import axios from 'axios';
 
-export const uploadImage = async (file, apiEndpoint, setUploadedStates) => {
-    const formData = new FormData();
-    formData.append('image', file);
+export const uploadImage = async (formData, apiEndpoint, setUploadedStates) => {
 
     for (const [key, value] of formData.entries()) {
-        console.log(key, value);
+        console.log(`${key}:`, value);
     }
 
     try {
-        const response = await axios.post(apiEndpoint, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data' // Set the content type
-            }
-        });
+        const response = await axios.post(apiEndpoint, formData);
 
         const result = response.data;
         setUploadedStates('Upload Successful');

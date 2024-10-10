@@ -5,6 +5,7 @@ import '../../Pages/ECommerce/ECommerce.css';
 
 import HomePageSlider from '../../Components/HomePageSlider/HomePageSlider';
 import ShopByCategory from '../../Components/ShopByCategory/ShopByCategory';
+import FinanceSlider from '../../Components/FinanceSlider/FinanceSlider';
 
 const HomePage = () => {
   
@@ -12,6 +13,7 @@ const HomePage = () => {
     <div className="HomePage" style={{gap: '30px'}}>
       <HomePageSlider />
       <ShopByCategory />
+      <FinanceSlider />
     </div >
   );
 };
