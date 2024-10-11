@@ -5,6 +5,8 @@ import Footer from '../Footer/Footer';
 import Sidebar from '../Sidebar/Sidebar';
 import routes from '../../Routes/Routes'; // Import your routes array
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'; // Import the ProtectedRoute component
+import useLoader from '../../Services/LoaderHook';
+import Loader from '../UI-Controls/Loader/Loader';
 
 function Layout() {
   return (

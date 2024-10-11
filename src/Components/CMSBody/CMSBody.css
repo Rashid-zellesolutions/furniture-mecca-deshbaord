@@ -150,6 +150,10 @@
     cursor: pointer;
 }
 
+.SliderAddNewImageBtnDiv.show-add-more-btn{
+    display: none;
+}
+
 .SliderAddNewImageBtnDiv img{
     width: auto;
     height: 10px;

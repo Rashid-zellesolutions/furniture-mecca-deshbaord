@@ -57,7 +57,7 @@ const CMSBody = ({bodyText ,selectedImage ,handleModalOpen, handleImageDelete, s
                     </div>
                 </div>
             )}
-            <div className='SliderAddNewImageBtnDiv'>
+            <div className={`SliderAddNewImageBtnDiv ${selectedImage.length === 0 ? 'show-add-more-btn' : ''}`}>
                 <button onClick={() => setModalView(true)}>
                     <img src={addBtn} alt='add-image' />
                     Add

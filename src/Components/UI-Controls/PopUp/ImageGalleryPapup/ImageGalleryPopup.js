@@ -22,7 +22,18 @@ import uploadImageIcon from '../../../../Assets/Images/uploadImg 48 x 48.png'
 import { url } from '../../../../Services/Api'
 
 
-const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelect}) => {
+const ImageGalleryPopup = ({
+        showImageGalleryPopUp, 
+        handleModalView, 
+        onImageSelect,
+        imageSendPayload, 
+        setImageSendPayload, 
+        alt_text, 
+        title, 
+        description, 
+        addImageToHomeSliderApi,
+        data,
+    }) => {
 
     // All States
     const [activeTab, setActiveTab] = useState('upload');
@@ -32,41 +43,14 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
     const [selectedImage, setSelectedImage] = useState([])
     const [selectedImageId, setSelectedImageId] = useState()
     const [isEditAble, setIsEditAble] = useState(false);
-    const [data, setData] = useState([])
+    // const [data, setData] = useState([])
     const [filterOpenIndex , setFilterOpenIndex] = useState(null);
     const [updateData, setUpdateData] = useState({
         alt_text: '',
         title: '',
         description: '',
     })
-    const [formData, setFormData] = useState({
-        alt_text: '',
-        title: '',
-        description: '',
-        image_url: ''
-    });
-
-    // Get data from api
-    const getGalleyImages = async () => {
-        try {
-            const response = await axios.get('https://fm.skyhub.pk/api/v1/media/pages/home/slider/get');
-            setData(response.data.homeSliders)
-            console.log("response", response.data.homeSliders)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    useEffect(() => {
-        getGalleyImages()
-    }, [])
-
-    // Post Slider Image
-    const [imageSendPayload, setImageSendPayload] = useState({
-        file: null,
-        alt_text: '',
-        title: '',
-        description: '',
-    })
+    
     const handleImageUploadChange = (event) => {
         const {name, value} = event.target;
         setImageSendPayload((prevData) => ({
@@ -76,7 +60,7 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
     }
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
-        const api = `${url}/api/v1/media/pages/home/slider/add`
+        const api = `${url}${addImageToHomeSliderApi}`
 
         if(file){
             setImageSendPayload((prevData) => ({
@@ -139,16 +123,16 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
     ]; 
 
     const imageEditInputData = [
-        {label: 'Alternate Text', placeholder: 'Text', value: selectedImage ? selectedImage.alt_text : '' , val: imageSendPayload.alt_text , name: 'alt_text'},
-        {label: 'Title', placeholder: 'Title', value: selectedImage ? selectedImage.title : '' , val: imageSendPayload.title , name: 'title'},
-        {label: 'Description', placeholder: 'Description', value: selectedImage ? selectedImage.description : '' , val: imageSendPayload.description , name: 'description'},
+        {label: 'Alternate Text', placeholder: 'Text',  val: alt_text , name: 'alt_text'},
+        {label: 'Title', placeholder: 'Title', val: title , name: 'title'},
+        {label: 'Description', placeholder: 'Description', val: description , name: 'description'},
         {label: 'Url', placeholder: 'url', value: selectedImage ? selectedImage.image_url : '' ,}
     ]
 
     // local functions 
     const handleTabActive = (id) => {
         setActiveTab(id);
-        getGalleyImages()
+        // getGalleyImages()
     }
     const handleFilterOpen = (index) => {
         setFilterOpenIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -160,11 +144,7 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
         fileInputRef.current.click();
     }
 
-    // const handleSelectedImage = (item) => {
-    //     setSelectedImage(item);
-    //     setSelectedImageId(item._id);
-    //     onImageSelect(item); // Call the function to update selected image in HomePage
-    //   };
+    console.log("gallery data",data)
 
   return (
     <div 
@@ -253,7 +233,7 @@ const ImageGalleryPopup = ({showImageGalleryPopUp, handleModalView, onImageSelec
 
                                         {/* Images Gallery images */}
                                         <div className='image-gallery-section'>
-                                            {data.map((item,) => (
+                                            {data && data.map((item,) => (
                                                 <img 
                                                     key={item._id} 
                                                     src={`${url}${item.image_url}`} 
