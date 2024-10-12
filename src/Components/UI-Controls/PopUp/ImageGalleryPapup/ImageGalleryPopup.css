@@ -101,6 +101,7 @@
     position: relative;
 }
 
+
 .content-item {
     display: none; /* Hide all content items initially */
     width: 100%;

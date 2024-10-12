@@ -149,3 +149,17 @@
     color: #fff;
     
 }
+
+.add-category-btn-div button{
+    background-color: transparent;
+    border: 1px dashed #595959;
+    color: #595959;
+    border-radius: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 600;
+}

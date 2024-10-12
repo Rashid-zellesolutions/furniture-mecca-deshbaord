@@ -18,6 +18,7 @@ const CMSBody = ({bodyText ,selectedImage ,handleModalOpen, handleImageDelete, s
     
         return () => clearInterval(interval); // Clean up on component unmount
       }, [selectedImage]);
+    //   console.log("images selected", selectedImage)
   return (
     <div className='SliderBody'>
             {selectedImage.length === 0 ? (  // Check if no images are selected

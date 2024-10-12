@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import './ShopByCategory.css'
-import explanationMark from '../../Assets/Images/Frame.png';
-import eyeIcon from '../../Assets/Images/hide-show.png'
-import arrowDown from '../../Assets/Images/dropdown 20 x 20.png'
+import explanationMark from '../../../Assets/Images/Frame.png';
+import eyeIcon from '../../../Assets/Images/hide-show.png'
+import arrowDown from '../../../Assets/Images/dropdown 20 x 20.png'
 
-const ShopByCategory = () => {
+const ShopByCategory = ({categoryHeading}) => {
     const [showCategories, setShowCategories] = useState(false);
     const handleCategories = () => {
         setShowCategories(!showCategories)
@@ -13,7 +13,7 @@ const ShopByCategory = () => {
     <div className='CategoryMainSection'>
         <div className='CategoryHead'>
             <div className='CategoryHeadLeft'>
-                <h3>Shop By Category</h3>
+                <h3>{categoryHeading}</h3>
                 <img src={explanationMark} alt='icon' />
             </div>
             <div className='CategoryHeadRight'>

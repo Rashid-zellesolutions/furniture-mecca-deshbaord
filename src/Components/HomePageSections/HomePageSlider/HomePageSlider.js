@@ -1,21 +1,25 @@
 import React, {useState, useEffect} from 'react'
 import './HomePageSlider.css'
 import axios from 'axios';
-import Loader from '../UI-Controls/Loader/Loader';
+import Loader from '../../UI-Controls/Loader/Loader';
 
 // icons
-import CMSMain from '../CMSMain/CMSMain';
-import CMSHead from '../UI-Controls/CMSHead/CMSHead';
-import CMSBody from '../CMSBody/CMSBody';
-import ImageGalleryPopup from '../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup';
-import InfoPopUp from '../InfoPopUp/InfoPopUp';
-import useLoader from '../../Services/LoaderHook';
-import { url } from '../../Services/Api';
+import CMSMain from '../../CMSMain/CMSMain';
+import CMSHead from '../../UI-Controls/CMSHead/CMSHead';
+import CMSBody from '../../CMSBody/CMSBody';
+// import ImageGalleryPopup from '../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup';
+import ImageGalleryPopup from '../../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup';
+import InfoPopUp from '../../InfoPopUp/InfoPopUp';
+import useLoader from '../../../Services/LoaderHook';
+import { url } from '../../../Services/Api';
+// import { uploadImage } from '../../../Services/functions';
+import { uploadImage } from '../../../Services/functions';
 
 const HomePageSlider = () => {
   const [infoModal, setInfoModal] = useState(false);
   const [modalView, setModalView] = useState(false);
   const [loading, setLoading] = useState()
+  const [uploadedStatus, setUploadedStates] = useState('');
   const [selectedImage, setSelectedImage] = useState([])
   const [homeSliderImagesFromApi, setHomeSliderImagesFromApi] = useState([])
   const [combinedImages, setCombinedIMages] = useState([])
@@ -35,15 +39,14 @@ const HomePageSlider = () => {
       description: '',
   })
 
-
-  // Get data from api
+  // get image for home slider media 
   const getApi = async () => {
     try {
-        const response = await axios.get(`${url}/api/v1/media/pages/home/slider/get`);
-        setData(response.data.homeSliders)
-        console.log("home api response ", response.data.homeSliders)
+      const response = await axios.get(`${url}/api/v1/media/pages/home/slider/get`);
+      console.log("Home Slider media response", response.data)
+      setData(response.data.homeSliders)
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   }
 
@@ -51,8 +54,52 @@ const HomePageSlider = () => {
     getApi()
   }, [])
 
+   // Get Images from api 
+
+   const getHomeSliderImagesFRomApi = async () => {
+    try {
+      const response = await axios.get('https://fm.skyhub.pk/api/v1/pages/home/slider/get')
+      setHomeSliderImagesFromApi(response.data.homeSliders)
+      updateCombinedImages(response.data.homeSliders, selectedImage)
+      // console.log("slider home appi", response)
+    } catch (error) {
+      console.error("error geting slider images", error);
+    }
+  }
+
+  useEffect(() => {
+    getHomeSliderImagesFRomApi()
+  }, [])
+
   const handleModalClose = () => {
     setModalView(false)
+  }
+
+
+  // handleFileChange
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    const api = `${url}/api/v1/media/pages/home/slider/add`
+
+    if(file){
+        setImageSendPayload((prevData) => ({
+            ...prevData,
+            file: file,
+        }));
+        setUploadedStates('loading');
+        alert('wait');
+        const imagePayloadToSend = new FormData();
+        imagePayloadToSend.append('image', file);
+        imagePayloadToSend.append('alt_text', imageSendPayload.alt_text);
+        imagePayloadToSend.append('title', imageSendPayload.title);
+        imagePayloadToSend.append('description', imageSendPayload.description);
+        imagePayloadToSend.append('image_url', imageSendPayload.image_url);
+        imagePayloadToSend.append('link_url', imageSendPayload.link_url);
+
+        await uploadImage(imagePayloadToSend, api, setUploadedStates)
+
+    }
+    console.log("handleChange file", file);
   }
 
   // info modal
@@ -82,22 +129,7 @@ const HomePageSlider = () => {
     setCombinedIMages(newCombinedImages)
   }
 
-  // Get Images from api 
-
-  const getHomeSliderImagesFRomApi = async () => {
-    try {
-      const response = await axios.get('https://fm.skyhub.pk/api/v1/pages/home/slider/get')
-      setHomeSliderImagesFromApi(response.data.homeSliders)
-      updateCombinedImages(response.data.homeSliders, selectedImage)
-    } catch (error) {
-      console.error("error geting slider images", error);
-    }
-  }
-
-  useEffect(() => {
-    getHomeSliderImagesFRomApi()
-    
-  }, [])
+ 
 
   // Delete Image from temporary and api
 
@@ -144,7 +176,7 @@ const HomePageSlider = () => {
       // Proceed to post images that are not deleted
       if (imagesToPost.length > 0) {
         await posImagesToHomeSlider(imagesToPost);
-        console.log("Selected images posted to database:", imagesToPost);
+        // console.log("Selected images posted to database:", imagesToPost);
         alert("All new images added to home slider");
       } else {
         alert("No images to add to slider");
@@ -193,6 +225,10 @@ const HomePageSlider = () => {
           handleModalOpen={handleModalOpen}
           handleImageDelete={handleImageDelete}
           setModalView={setModalView}
+          // selectedImage={selectedImage}
+          // handleModalOpen={handleModalOpen}
+          // handleImageDelete={handleImageDelete}
+          // setModalView={setModalView}
         />
 
         <ImageGalleryPopup 
@@ -203,9 +239,9 @@ const HomePageSlider = () => {
           setImageSendPayload={setImageSendPayload}
           alt_text={imageSendPayload.alt_text}
           title={imageSendPayload.title}
-          // getGalleyImages={getGalleyImages}
           data={data}
-          addImageToHomeSliderApi={`/api/v1/media/pages/home/slider/add`}
+          handleFileChange={handleFileChange}
+          // addImageToHomeSliderApi={`/api/v1/media/pages/home/slider/add`}
         />
         <InfoPopUp 
           showInfoModal={infoModal}

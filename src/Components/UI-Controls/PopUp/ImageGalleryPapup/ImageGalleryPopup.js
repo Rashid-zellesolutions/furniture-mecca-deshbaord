@@ -33,13 +33,14 @@ const ImageGalleryPopup = ({
         description, 
         addImageToHomeSliderApi,
         data,
+        handleFileChange
     }) => {
 
     // All States
     const [activeTab, setActiveTab] = useState('upload');
     const [images, setImages] = useState([]);
     const fileInputRef = useRef(null)
-    const [uploadedStatus, setUploadedStates] = useState('');
+    // const [uploadedStatus, setUploadedStates] = useState('');
     const [selectedImage, setSelectedImage] = useState([])
     const [selectedImageId, setSelectedImageId] = useState()
     const [isEditAble, setIsEditAble] = useState(false);
@@ -58,60 +59,65 @@ const ImageGalleryPopup = ({
             [name]: value,
         }))
     }
-    const handleFileChange = async (event) => {
-        const file = event.target.files[0];
-        const api = `${url}${addImageToHomeSliderApi}`
+    // const handleFileChange = async (event) => {
+    //     const file = event.target.files[0];
+    //     const api = `${url}${addImageToHomeSliderApi}`
 
-        if(file){
-            setImageSendPayload((prevData) => ({
-                ...prevData,
-                file: file,
-            }));
-            setUploadedStates('loading');
-            alert('wait');
-            const imagePayloadToSend = new FormData();
-            imagePayloadToSend.append('image', file);
-            imagePayloadToSend.append('alt_text', imageSendPayload.alt_text);
-            imagePayloadToSend.append('title', imageSendPayload.title);
-            imagePayloadToSend.append('description', imageSendPayload.description);
+    //     if(file){
+    //         setImageSendPayload((prevData) => ({
+    //             ...prevData,
+    //             file: file,
+    //         }));
+    //         setUploadedStates('loading');
+    //         alert('wait');
+    //         const imagePayloadToSend = new FormData();
+    //         imagePayloadToSend.append('image', file);
+    //         imagePayloadToSend.append('alt_text', imageSendPayload.alt_text);
+    //         imagePayloadToSend.append('title', imageSendPayload.title);
+    //         imagePayloadToSend.append('description', imageSendPayload.description);
+    //         imagePayloadToSend.append('image_url', imageSendPayload.image_url);
+    //         imagePayloadToSend.append('link_url', imageSendPayload.link_url);
 
-            await uploadImage(imagePayloadToSend, api, setUploadedStates)
+    //         await uploadImage(imagePayloadToSend, api, setUploadedStates)
 
-        }
-        console.log("handleChange file", file);
-    }
+    //     }
+    //     console.log("handleChange file", file);
+    // }
 
     
     // Update Images Data
+    
     const handleSelectedImage = (item) => {
         setSelectedImage(item)
         setSelectedImageId(item._id)
         onImageSelect(item);
         console.log("selected image", item)
     };
-    const handleChane = (e) => {
-        const {name , value} = e.target;
-        setUpdateData({...updateData, [name]: value})
-    };
 
-    const handleSubmit = async () => {
-        const hasUpdate = Object.values(updateData).some(field => field != '');
-        if(!hasUpdate){
-            alert("no fields to update");
-            return;
-        }
+    // const handleChane = (e) => {
+    //     const {name , value} = e.target;
+    //     setUpdateData({...updateData, [name]: value})
+    // };
 
-        try {
-            await axios.put(`https://fm.skyhub.pk/api/v1/media/pages/home/slider/${selectedImageId}`, updateData);
-            console.log("Data UPdate", updateData);
-            alert("data updated")
-        } catch (error) {
-            console.error("Error Updating Data", updateData);
-            alert("Failed To update")
-        }
-    }
+    // const handleSubmit = async () => {
+    //     const hasUpdate = Object.values(updateData).some(field => field != '');
+    //     if(!hasUpdate){
+    //         alert("no fields to update");
+    //         return;
+    //     }
+
+    //     try {
+    //         await axios.put(`https://fm.skyhub.pk/api/v1/media/pages/home/slider/${selectedImageId}`, updateData);
+    //         console.log("Data UPdate", updateData);
+    //         alert("data updated")
+    //     } catch (error) {
+    //         console.error("Error Updating Data", updateData);
+    //         alert("Failed To update")
+    //     }
+    // }
 
     // Local Objects
+    
     const imageGalleryFilterData = [
         {name: 'All media items', items: ['item one', 'item two', 'item three']},
         {name: 'All media items', items: ['item one', 'item two', 'item three']},
@@ -144,7 +150,7 @@ const ImageGalleryPopup = ({
         fileInputRef.current.click();
     }
 
-    console.log("gallery data",data)
+    // console.log("gallery data home slider",data);
 
   return (
     <div 
@@ -237,7 +243,7 @@ const ImageGalleryPopup = ({
                                                 <img 
                                                     key={item._id} 
                                                     src={`${url}${item.image_url}`} 
-                                                    alt='item' 
+                                                    alt={data.alt_text} 
                                                     onClick={() => handleSelectedImage(item)}
                                                 />
                                             ))}
@@ -302,7 +308,7 @@ const ImageGalleryPopup = ({
             </div>
             {/* Footer add to gallery section */}
             <div className='image-gallery-modal-footer'>
-                <button className='add-to-gallery-btn' onClick={handleSubmit}>
+                <button className='add-to-gallery-btn'>
                     Add to gallery
                 </button>
             </div>
