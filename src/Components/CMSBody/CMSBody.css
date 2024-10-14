@@ -38,7 +38,7 @@
 
 .pagination {
     text-align: center;
-    margin-top: 10px;
+    /* margin-top: 10px; */
 }
 
 .dot {
@@ -98,8 +98,6 @@
     flex-grow: 1;
     padding: 0px 0px;
     box-sizing: border-box;
-    /* background-color: orange; */
-
 }
 
 .image-slider-image-delete{
@@ -145,7 +143,7 @@
     justify-content: center;
     gap: 5px;
     padding: 5px 10px;
-    border: 1px solid var(--border-color);
+    border: 1px dashed #595959;
     border-radius: 25px;
     cursor: pointer;
 }

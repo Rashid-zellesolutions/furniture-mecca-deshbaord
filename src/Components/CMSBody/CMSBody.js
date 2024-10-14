@@ -7,17 +7,17 @@ import { url } from '../../Services/Api'
 
 const CMSBody = ({bodyText ,selectedImage ,handleModalOpen, handleImageDelete, setModalView}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    useEffect(() => {
-        const interval = setInterval(() => {
-          if (selectedImage.length > 1) {
-            setCurrentIndex((prevIndex) => 
-              (prevIndex + 1) % selectedImage.length // Loop back to the first image
-            );
-          }
-        }, 3000); // Change image every 3 seconds
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //       if (selectedImage.length > 1) {
+    //         setCurrentIndex((prevIndex) => 
+    //           (prevIndex + 1) % selectedImage.length 
+    //         );
+    //       }
+    //     }, 3000); 
     
-        return () => clearInterval(interval); // Clean up on component unmount
-      }, [selectedImage]);
+    //     return () => clearInterval(interval); 
+    //   }, [selectedImage]);
     //   console.log("images selected", selectedImage)
   return (
     <div className='SliderBody'>

@@ -7,6 +7,9 @@ import InfoPopUp from '../../InfoPopUp/InfoPopUp';
 import axios from 'axios';
 import { url } from '../../../Services/Api';
 import { uploadImage } from '../../../Services/functions';
+import { useLoader } from '../../../Context/ComponentContext/LoaderContext';
+import loaderTwo from '../../../Assets/Images/loader-check-one.gif'
+import MainLoader from '../../UI-Controls/MainLoader/MainLoader';
 
 const FinanceSlider = () => {
   const [infoModal, setInfoModal] = useState(false);
@@ -17,6 +20,10 @@ const FinanceSlider = () => {
   const [combinedImages, setCombinedImages] = useState([]); // Fixed typo in state variable name
   const [data, setData] = useState([]);
   const [deletedImagesIds, setDeletedImagesIds] = useState([]);
+  // const {showLoader, hideLoader} = useLoader()
+  const [loader, setLoader] = useState(false);
+  const showLoader = () => {setLoader(true)}
+  const hideLoader = () => {setLoader(false)}
 
   const [imageSendPayload, setImageSendPayload] = useState({
     image_url: '',
@@ -144,20 +151,25 @@ const FinanceSlider = () => {
   };
 
   const sendImagesHomeSlider = async () => {
+    showLoader()
     try {
       const imagesToPost = selectedImage.filter(image => !deletedImagesIds.includes(image._id));
       const apiImagesToDelete = deletedImagesIds.filter(id => homeSliderImagesFromApi.some(image => image._id === id));
 
       if (apiImagesToDelete.length > 0) {
         try {
+          showLoader()
           await deleteImagesBulk(apiImagesToDelete);
+          hideLoader()
         } catch (error) {
           console.error("Error deleting images from API:", error); // Added error log
         }
       }
 
       if (imagesToPost.length > 0) {
+        showLoader()
         await posImagesToHomeSlider(imagesToPost);
+        hideLoader()
         alert("All new images added to home slider");
       } else {
         alert("No images to add to slider");
@@ -210,6 +222,7 @@ const FinanceSlider = () => {
 
   return (
     <div className='FinanceSlider'>
+      {loader && <MainLoader loaderGif={loaderTwo} />}
       <CMSHead
         heading={'Finance Slider'}
         buttonText={'Save'}

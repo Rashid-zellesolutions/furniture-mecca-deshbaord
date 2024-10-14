@@ -46,11 +46,11 @@ const ImageGalleryPopup = ({
     const [isEditAble, setIsEditAble] = useState(false);
     // const [data, setData] = useState([])
     const [filterOpenIndex , setFilterOpenIndex] = useState(null);
-    const [updateData, setUpdateData] = useState({
-        alt_text: '',
-        title: '',
-        description: '',
-    })
+    // const [updateData, setUpdateData] = useState({
+    //     alt_text: '',
+    //     title: '',
+    //     description: '',
+    // })
     
     const handleImageUploadChange = (event) => {
         const {name, value} = event.target;
@@ -59,6 +59,7 @@ const ImageGalleryPopup = ({
             [name]: value,
         }))
     }
+
     // const handleFileChange = async (event) => {
     //     const file = event.target.files[0];
     //     const api = `${url}${addImageToHomeSliderApi}`

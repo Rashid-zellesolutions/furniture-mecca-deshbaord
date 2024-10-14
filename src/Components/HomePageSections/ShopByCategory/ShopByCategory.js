@@ -3,6 +3,7 @@ import './ShopByCategory.css'
 import explanationMark from '../../../Assets/Images/Frame.png';
 import eyeIcon from '../../../Assets/Images/hide-show.png'
 import arrowDown from '../../../Assets/Images/dropdown 20 x 20.png'
+import CMSHead from '../../UI-Controls/CMSHead/CMSHead';
 
 const ShopByCategory = ({categoryHeading}) => {
     const [showCategories, setShowCategories] = useState(false);
@@ -11,7 +12,7 @@ const ShopByCategory = ({categoryHeading}) => {
     }
   return (
     <div className='CategoryMainSection'>
-        <div className='CategoryHead'>
+        {/* <div className='CategoryHead'>
             <div className='CategoryHeadLeft'>
                 <h3>{categoryHeading}</h3>
                 <img src={explanationMark} alt='icon' />
@@ -20,7 +21,11 @@ const ShopByCategory = ({categoryHeading}) => {
                 <img src={eyeIcon} alt='hide-show' />
                 <button>Save</button>
             </div>
-        </div>
+        </div> */}
+        <CMSHead 
+            heading={'Shop By Category'}
+            buttonText={'Save'}
+        />
         <div className='CategoryBody'>
             <p className='category-heading'>Select Category</p>
             <div className='category-fropdown-and-button'>

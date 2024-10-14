@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import '../../Page.css';
 // import '../Components/HomePageSlider/HomePageSlider.css';
 // import '../../Pages/ECommerce/ECommerce.css';
@@ -13,20 +13,31 @@ import FinanceSlider from '../../Components/HomePageSections/FinanceSlider/Finan
 // import HomePageSlider from '../../Components/HomePageSections/HomePageSlider/HomePageSlider';
 import HomePageSlider from '../../Components/HomePageSections/HomePageSlider/HomePageSlider';
 import ShopByCategory from '../../Components/HomePageSections/ShopByCategory/ShopByCategory';
+import Loader from '../../Components/UI-Controls/Loader/Loader';
+import MainLoader from '../../Components/UI-Controls/MainLoader/MainLoader';
+import useLoader from '../../Services/LoaderHook';
 
 const HomePage = () => {
+  const { loading } = useLoader()
+
   
   return (
-    <div className="HomePage" style={{gap: '30px'}}>
-      <HomePageSlider />
-      <ShopByCategory categoryHeading={'Shop By Category'} />
-      <FinanceSlider />
-      <TrandingNow />
-      <BestSellerSection />
-      <FinancingBanner />
-      <AdvertisingBanner />
-      <DealOfMonth />
-      <FurnitureForBudget />
+    <div className="HomePage" style={{gap: '20px'}}>
+      {loading ? ( 
+        <MainLoader /> ) :
+        (
+          <>
+            <HomePageSlider />
+            <ShopByCategory />
+            <FinanceSlider />
+            <TrandingNow />
+            <BestSellerSection />
+            <FinancingBanner />
+            <AdvertisingBanner />
+            <DealOfMonth />
+            <FurnitureForBudget />
+      </>
+      )}
     </div >
   );
 };

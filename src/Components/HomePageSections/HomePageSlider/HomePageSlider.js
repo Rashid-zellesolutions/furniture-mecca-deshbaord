@@ -3,6 +3,8 @@ import './HomePageSlider.css'
 import axios from 'axios';
 import Loader from '../../UI-Controls/Loader/Loader';
 
+import loaderOne  from '../../../Assets/Images/loader.gif'
+
 // icons
 import CMSMain from '../../CMSMain/CMSMain';
 import CMSHead from '../../UI-Controls/CMSHead/CMSHead';
@@ -10,10 +12,12 @@ import CMSBody from '../../CMSBody/CMSBody';
 // import ImageGalleryPopup from '../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup';
 import ImageGalleryPopup from '../../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup';
 import InfoPopUp from '../../InfoPopUp/InfoPopUp';
-import useLoader from '../../../Services/LoaderHook';
+// import useLoader from '../../../Services/LoaderHook';
 import { url } from '../../../Services/Api';
 // import { uploadImage } from '../../../Services/functions';
 import { uploadImage } from '../../../Services/functions';
+import { useLoader } from '../../../Context/ComponentContext/LoaderContext';
+import MainLoader from '../../UI-Controls/MainLoader/MainLoader';
 
 const HomePageSlider = () => {
   const [infoModal, setInfoModal] = useState(false);
@@ -24,6 +28,9 @@ const HomePageSlider = () => {
   const [homeSliderImagesFromApi, setHomeSliderImagesFromApi] = useState([])
   const [combinedImages, setCombinedIMages] = useState([])
   const [deletedImagesIds, setDeletedImagesIds] = useState([])
+  // const {showLoader, hideLoader} = useLoader()
+  const showLoader = () => {setLoading(true)}
+  const hideLoader = () => {setLoading(false)}
 
   // gallery modal imports
   const [data, setData] = useState([])
@@ -47,6 +54,7 @@ const HomePageSlider = () => {
       setData(response.data.homeSliders)
     } catch (error) {
       console.log(error);
+    }finally{
     }
   }
 
@@ -158,6 +166,7 @@ const HomePageSlider = () => {
   // Add bulk 
 
   const sendImagesHomeSlider = async () => {
+      
     try {
       // Filter selected images to post
       const imagesToPost = selectedImage.filter(image => !deletedImagesIds.includes(image._id));
@@ -167,7 +176,10 @@ const HomePageSlider = () => {
   
       if (apiImagesToDelete.length > 0) {
         try {
+          showLoader()
           await deleteImagesBulk(apiImagesToDelete);
+          hideLoader()
+          // showLoader(true)
         } catch (error) {
           console.error("Error during delete images from API:", error);
         }
@@ -175,15 +187,18 @@ const HomePageSlider = () => {
   
       // Proceed to post images that are not deleted
       if (imagesToPost.length > 0) {
+        showLoader()
         await posImagesToHomeSlider(imagesToPost);
+        hideLoader()
+        // showLoader(true)
         // console.log("Selected images posted to database:", imagesToPost);
-        alert("All new images added to home slider");
+        // alert("All new images added to home slider");
       } else {
-        alert("No images to add to slider");
+        // alert("No images to add to slider");
       }
     } catch (error) {
       console.error("Error sending data:", error);
-    }
+    } 
 
   };
   
@@ -193,6 +208,7 @@ const HomePageSlider = () => {
         'Content-Type': 'application/json', // Ensure the content type is set
       }
     });
+    
   }
 
   const posImagesToHomeSlider = async (images) => {
@@ -211,7 +227,7 @@ const HomePageSlider = () => {
 
   return (
         <div className='SlderMainSection'>
-          {loading && <Loader />}
+          {loading && <MainLoader loaderGif={loaderOne} />}
         <CMSHead
           heading={'Home Page Slider'}
           buttonText={'Save'}
