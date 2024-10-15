@@ -29,6 +29,7 @@
   --font-size-extra-large: 20px;
   --font-15: 15px;
   --font-size-large: 13.5px;
+  --font-12: 12px;
   --font-size-medium: 14px;
   --font-size-avg: 11.5px;
   --font-size-small: 12px;
@@ -44,6 +45,7 @@
   --line-height-30: 30px;
   --line-height-28: 28px;
   --line-height-22: 22px;
+  --line-height-18: 18px;
 
   /* Spacing */
   /* --font-size-large: 18px; */

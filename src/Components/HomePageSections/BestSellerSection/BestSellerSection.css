@@ -30,7 +30,9 @@
     justify-content: space-between;
     border: 1px solid #F0F0F0;
     background-color: #FDFDFD;
+    /* box-shadow: 0px 1px 4px 0px #00000026; */
     box-shadow: 0px 1px 4px 0px #00000026;
+    border: 1px solid var(--border-color);
     padding: 10px;
     cursor: pointer;
 }
@@ -45,34 +47,57 @@
 
 .best-seller-dropdown-body{
     display: flex;
-    flex-direction: column;
     height: 0;
     overflow: hidden;
-    /* border: 1px solid #F0F0F0; */
-    background-color: #FDFDFD;
-    box-shadow: 0px 1px 4px 0px #00000026;
+    border: 1px solid #F0F0F0;
+    background-color: #FFFFFF;
+    padding: 0 20px;
+    /* box-shadow: 0px 1px 4px 0px #00000026; */
     width: 100%;
     box-sizing: border-box;
     transition: all 0.3s ease;
+    overflow: hidden;
+
 }
 
 .best-seller-dropdown-body.show-category{
-    height: 90px;
+    height: auto;
+    padding: 20px;
 }
 
-.best-seller-dropdown-body p{
-    margin: 0;
-    padding: 6px 10px;
-    cursor: pointer;
-    color: #595959;
-    font-size: 13px;
-    line-height: 18px;
-    font-weight: 400;
+.best-seller-dropdown-containt{
+    display: flex;
+    gap: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    align-items: start;
+    justify-content: center;
 }
 
-.best-seller-dropdown-body p:hover{
-    background: linear-gradient(to right, #4487C5, white);
-    color: #fff;
+.best-seller-category-image-upload-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    border: 1px dashed #595959;
+    height: max-content;
+    border-radius: 5px;
+}
+
+.best-seller-dropdown-inputs-div{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.best-seller-category-title-input{
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
 }
 
 .best-seller-category-btn{
@@ -83,7 +108,7 @@
 }
 
 .best-seller-category-btn button{
-    padding: 5px 10px;
+    padding: 5px 15px;
     border: 1px dashed #595959;
     color: #595959;
     background-color: transparent;

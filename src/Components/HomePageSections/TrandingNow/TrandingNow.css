@@ -31,9 +31,11 @@
 
 .tranding-now-main-image-slider {
     display: flex;
-    width: 65%;
+    width: 70%;
     flex-grow: 1;
     align-items: center;
+    /* height: 345px; */
+    overflow: hidden;
     justify-content: center;
     background-color: #FDFDFD;
 }
@@ -56,11 +58,13 @@
 .tranding-now-slider {
     display: flex;
     width: 100%;
+    height: 345px;
     transition: transform 0.5s ease;
 }
 
 .tranding-now-slide {
     min-width: 100%;
+    /* height: 355px; */
     transition: opacity 0.5s ease;
     opacity: 0;
 }
@@ -70,7 +74,7 @@
     flex-direction: row;
     position: relative;
     width: 100%;
-    /* height: 305px; */
+    height: 335px;
     flex-grow: 1;
     padding: 0px 0px;
     box-sizing: border-box;
@@ -79,7 +83,7 @@
 .tranding-now-image-slider-image {
     width: 100%;
     height: auto;
-    /* object-fit: cover; */
+    object-fit: cover;
 }
 
 
@@ -153,7 +157,7 @@
 
 .add-image-button-container button {
     width: max-content;
-    padding: 5px 10px;
+    padding: 5px 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -170,7 +174,8 @@
 .tranding-now-sub-images {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    width: 35%;
+    width: 30%;
+    height: max-content;
     box-sizing: border-box;
     gap: 10px;
     background-color: #FDFDFD;
@@ -189,14 +194,14 @@
     display: flex;
     position: relative;
     width: auto;
-    height: 100px;
+    height: 105px;
     box-sizing: border-box;
 }
 
 .sub-image-single-show img{
-    width: auto;
+    width: 100%;
     height: 100%;
-    object-fit: contain;
+    /* object-fit: cover; */
 }
 
 .close-sub-image-btn {

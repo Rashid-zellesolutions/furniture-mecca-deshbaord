@@ -241,10 +241,6 @@ const HomePageSlider = () => {
           handleModalOpen={handleModalOpen}
           handleImageDelete={handleImageDelete}
           setModalView={setModalView}
-          // selectedImage={selectedImage}
-          // handleModalOpen={handleModalOpen}
-          // handleImageDelete={handleImageDelete}
-          // setModalView={setModalView}
         />
 
         <ImageGalleryPopup 

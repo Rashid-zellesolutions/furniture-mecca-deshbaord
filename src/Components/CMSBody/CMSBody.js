@@ -1,26 +1,15 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import './CMSBody.css'
 import imageIcon from '../../Assets/Images/uploadImg 48 x 48.png'
 import addBtn from '../../Assets/Images/add-btn-charcol.png'
 import crossButton from '../../Assets/Images/cross-button-32-X-32.png'
 import { url } from '../../Services/Api'
 
-const CMSBody = ({bodyText ,selectedImage ,handleModalOpen, handleImageDelete, setModalView}) => {
+const CMSBody = ({ bodyText, selectedImage, handleModalOpen, handleImageDelete, setModalView }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //       if (selectedImage.length > 1) {
-    //         setCurrentIndex((prevIndex) => 
-    //           (prevIndex + 1) % selectedImage.length 
-    //         );
-    //       }
-    //     }, 3000); 
-    
-    //     return () => clearInterval(interval); 
-    //   }, [selectedImage]);
-    //   console.log("images selected", selectedImage)
-  return (
-    <div className='SliderBody'>
+
+    return (
+        <div className='SliderBody'>
             {selectedImage.length === 0 ? (  // Check if no images are selected
                 <div className='upload-image-section'>
                     <p>{bodyText}</p>
@@ -31,7 +20,7 @@ const CMSBody = ({bodyText ,selectedImage ,handleModalOpen, handleImageDelete, s
             ) : (
                 <div className='slider-container'>
                     <div className='slider'
-                      style={{ transform: `translateX(-${currentIndex * 100}%)`, transition: 'transform 0.5s ease' }}
+                        style={{ transform: `translateX(-${currentIndex * 100}%)`, transition: 'transform 0.5s ease' }}
                     >
                         {selectedImage.map((image, index) => (
                             <div
@@ -47,6 +36,19 @@ const CMSBody = ({bodyText ,selectedImage ,handleModalOpen, handleImageDelete, s
                             </div>
                         ))}
                     </div>
+                    {/* <div className='pagination'>
+                        {selectedImage.map((_, index) => (
+                            <button
+                                key={index}
+                                className={`dot ${index === currentIndex ? 'active' : ''}`}
+                                onClick={() => setCurrentIndex(index)}
+                            ></button>
+                        ))}
+                    </div> */}
+                </div>
+            )}
+            <div className={`SliderAddNewImageBtnDiv ${selectedImage.length === 0 ? 'show-add-more-btn' : ''}`}>
+                <div className='pagination-dots-container'>
                     <div className='pagination'>
                         {selectedImage.map((_, index) => (
                             <button
@@ -57,15 +59,13 @@ const CMSBody = ({bodyText ,selectedImage ,handleModalOpen, handleImageDelete, s
                         ))}
                     </div>
                 </div>
-            )}
-            <div className={`SliderAddNewImageBtnDiv ${selectedImage.length === 0 ? 'show-add-more-btn' : ''}`}>
-                <button onClick={() => setModalView(true)}>
+                <button className='add-new-image-btn' onClick={() => setModalView(true)}>
                     <img src={addBtn} alt='add-image' />
                     Add
                 </button>
             </div>
         </div>
-  )
+    )
 }
 
 export default CMSBody

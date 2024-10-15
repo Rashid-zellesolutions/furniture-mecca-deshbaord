@@ -1,11 +1,11 @@
-
 .SliderBody{
     display: flex;
     flex-direction: column;
     width: 100%;
     align-items: start;
     background: #FFFFFF;
-    padding: 20px 25px;
+    padding: 20px 25px 10px 25px;
+    gap: 10px;
     box-sizing: border-box;
 }
 
@@ -35,26 +35,6 @@
     opacity: 1;
 }
 
-
-.pagination {
-    text-align: center;
-    /* margin-top: 10px; */
-}
-
-.dot {
-    display: inline-block;
-    height: 10px;
-    width: 10px;
-    margin: 0 5px;
-    background-color: lightgray;
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-}
-
-.dot.active {
-    background-color: gray;
-}
 
 
 
@@ -129,11 +109,45 @@
 .SliderAddNewImageBtnDiv {
     display: flex;
     align-items: center;
-    justify-content: end;
+    /* justify-content: end; */
+    justify-content: space-between;
     width: 100%;
 }
 
-.SliderAddNewImageBtnDiv button{
+.pagination-dots-container{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    flex-grow: 1;
+    /* background-color: orange; */
+}
+
+
+.pagination {
+    text-align: center;
+    display: flex;
+    /* margin-top: 10px; */
+}
+
+.dot {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    margin: 0 5px;
+    background-color: lightgray;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.dot.active {
+    background-color: gray;
+}
+
+
+.add-new-image-btn{
     font-size: var(--font-15);
     line-height: var(--line-height-22);
     font-weight: var(--font-weight-semi-bold);
@@ -142,17 +156,19 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    padding: 5px 10px;
+    background-color: transparent;
+    padding: 5px 15px;
     border: 1px dashed #595959;
     border-radius: 25px;
     cursor: pointer;
+    width: max-content;
 }
 
 .SliderAddNewImageBtnDiv.show-add-more-btn{
     display: none;
 }
 
-.SliderAddNewImageBtnDiv img{
+.add-new-image-btn img{
     width: auto;
     height: 10px;
     object-fit: contain;
