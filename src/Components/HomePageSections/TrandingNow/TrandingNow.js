@@ -16,14 +16,38 @@ const TrandingNow = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [trandingNowMainImages, setTrandingNowMainImages] = useState([])
   const [subImagesData, setSubImagesData] = useState(Array(6).fill(null));
-  const [combinedTrandingNowImages, setCombinedTrandingNowImages] = useState(null);
+  // const [combinedTrandingNowImages, setCombinedTrandingNowImages] = useState(null);
   const [checkCMSData, setCheckCMSData] = useState(null);
   // Track IDs for the images to allow deletions
   const [deletedImageIds, setDeletedImageIds] = useState([]);
-  const handleImageDelete = (imageId) => {
-  setDeletedImageIds((prev) => [...prev, imageId]); // Track deleted image ID
-};
 
+  const handleImageDelete = async (imageId) => {
+    setDeletedImageIds((prev) => [...prev, imageId]); // Track deleted image ID
+
+    // Update checkCMSData to remove the deleted image from the UI
+    setCheckCMSData((prevData) => {
+      const updatedSliders = prevData.sliders.filter(slider => slider._id !== imageId);
+      return {
+        ...prevData,
+        sliders: updatedSliders
+      };
+    });
+  };
+
+  const handleSubImageDelete = (index) => {
+    setSubImagesData((prevData) => {
+      const newData = [...prevData];
+      newData[index] = null; // Set to null to represent deletion
+      return newData;
+    });
+
+    // Update checkCMSData to reflect deletion in product data
+    setCheckCMSData((prevData) => {
+      const updatedProducts = { ...prevData };
+      delete updatedProducts[`product_${index + 1}`]; // Remove product entry
+      return updatedProducts;
+    });
+  };
 
   const [imageSendPayload, setImageSendPayload] = useState({
     file: null,
@@ -52,29 +76,134 @@ const TrandingNow = () => {
       imagePayloadToSend.append('image_url', imageSendPayload.image_url);
       imagePayloadToSend.append('link_url', imageSendPayload.link_url);
 
-      await uploadImage(imagePayloadToSend, api, setUploadedStates)
+      try {
+        await uploadImage(imagePayloadToSend, api, setUploadedStates);
+        setUploadedStates('success');
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        setUploadedStates('error');
+      }
 
     }
     console.log("handleChange file", file);
   }
-  const handleImageSelect = (selectedImage) => {
-    const newSelectedImage = selectedImage;
-    console.log('Selected Image:', newSelectedImage);
-    if (selectedImageIndex !== null) {
-      setSubImagesData((prevData) => {
-        const newData = [...prevData];
-        newData[selectedImageIndex] = newSelectedImage;
-        return newData;
-      });
-      handleModalClose()
-    } else {
-      setTrandingNowMainImages((prevData) => [...prevData, newSelectedImage]);
-      handleModalClose()
-    }
-    // Handle the selected image as needed
-  };
 
-  // get tranding now images of media
+  // const handleImageSelect = (selectedImage) => {
+  // const newSelectedImage = selectedImage;
+  // console.log('Selected Image:', newSelectedImage);
+
+  // // Assuming subImagesData is managed properly
+  // setSubImagesData((prevData) => {
+  //   const newData = [...prevData];
+  //   // Add the selected image to the appropriate index
+  //   if (selectedImageIndex !== null) {
+  //     newData[selectedImageIndex] = newSelectedImage; // Replace
+  //   } else {
+  //     newData.push(newSelectedImage); // Add new
+  //   }
+  //   return newData;
+  // });
+
+  // // Optionally, update the checkCMSData if the new image should also reflect there
+  // setCheckCMSData((prevData) => ({
+  //   ...prevData,
+  //   sliders: [...prevData.sliders, newSelectedImage] // Add to existing sliders if needed
+  // }));
+  // };
+
+
+  //   const handleImageSelect = (selectedImage) => {
+  //   console.log('Selected Image:', selectedImage);
+
+  //   setSubImagesData((prevData) => {
+  //     const newData = [...prevData];
+
+  //     if (selectedImageIndex !== null) {
+  //       // Replace the existing image at the selected index
+  //       newData[selectedImageIndex] = selectedImage;
+  //     } else {
+  //       // If no index is selected, push the new image
+  //       newData.push(selectedImage);
+  //     }
+
+  //     return newData;
+  //   });
+
+  //   setCheckCMSData((prevData) => ({
+  //     ...prevData,
+  //     sliders: [...prevData.sliders, selectedImage], // Adjust if you want to reflect this in sliders
+  //     [`product_${selectedImageIndex + 1}`]: selectedImage // Update specific product entry
+  //   }));
+  // };
+
+  const handleImageSelect = (selectedImage) => {
+  console.log('Selected Image:', selectedImage);
+
+  // Update the specific product entry in checkCMSData for sub-images
+  if (selectedImageIndex !== null) {
+    setSubImagesData((prevData) => {
+      const newData = [...prevData];
+      newData[selectedImageIndex] = selectedImage; // Replace the existing image
+      return newData;
+    });
+
+    setCheckCMSData((prevData) => ({
+      ...prevData,
+      [`product_${selectedImageIndex + 1}`]: selectedImage // Update specific product entry
+    }));
+  } else {
+    // Logic for updating sliders when no selectedImageIndex is defined (if applicable)
+    setCheckCMSData((prevData) => ({
+      ...prevData,
+      sliders: [...prevData.sliders, selectedImage] // Add new slider if needed
+    }));
+  }
+};
+
+
+  // Update the image selection logic to replace the upload icon with the newly uploaded image
+  // const handleImageSelect = (selectedImage) => {
+  //   console.log('Selected Image:', selectedImage);
+
+  //   setSubImagesData((prevData) => {
+  //     const newData = [...prevData];
+
+  //     if (selectedImageIndex !== null) {
+  //       // Replace the existing image at the selected index
+  //       newData[selectedImageIndex] = selectedImage;
+  //     } else {
+  //       // If no index is selected, push the new image
+  //       newData.push(selectedImage);
+  //     }
+
+  //     return newData;
+  //   });
+
+  //   // Optionally, update checkCMSData if needed
+  //   setCheckCMSData((prevData) => ({
+  //     ...prevData,
+  //     [`product_${selectedImageIndex + 1}`]: selectedImage // Update specific product entry
+  //   }));
+  // };
+
+
+  // Handle image selection
+  // const handleImageSelect = (selectedImage) => {
+  //   console.log('Selected Image:', selectedImage);
+
+  //   if (selectedImageIndex !== null) {
+  //     // Replace the existing image at the selected index
+  //     setSubImagesData((prevData) => {
+  //       const newData = [...prevData];
+  //       newData[selectedImageIndex] = selectedImage;
+  //       return newData;
+  //     });
+  //   }
+
+  //   // Optionally, you can close the modal here
+  //   handleModalClose();
+  // };
+
   const getTrandingNowMediaImages = async () => {
     try {
       const response = await axios.get('https://fm.skyhub.pk/api/v1/media/pages/home/trending/get');
@@ -111,6 +240,7 @@ const TrandingNow = () => {
     const payload = {
       sliders: []
     };
+
     if (trandingNowMainImages.length >= 2) {
       payload.sliders = trandingNowMainImages.map((image, index) => ({
         uid: `slider-${index + 1}`,
@@ -126,7 +256,7 @@ const TrandingNow = () => {
       if (item && item.image_url) {
         payload[`product_${index + 1}`] = {
           uid: `product-${index + 1}`,
-          image_url: item.image_url, // Adjust based on your actual data structure
+          image_url: item.image_url,
           alt_text: item.alt_text || `Product ${index + 1}`,
           title: item.title || '',
           link_url: item.link_url || '#',
@@ -142,27 +272,34 @@ const TrandingNow = () => {
     createTrandingNowCMSPayload();
   }, [trandingNowMainImages, subImagesData]);
 
-  // update existing data of tranding now
-  const editTrandingData = async () => {
+  const editTrandingData = async (existingId) => {
+    // Create the updated payload from current state
     const existingPayload = checkCMSData;
     const updatedPayload = createTrandingNowCMSPayload();
 
-    // Merge existing sliders with new ones while avoiding duplicates if necessary
-  // Filter out deleted images from existing sliders
-  const mergedSliders = existingPayload.sliders
-    .filter(slider => !deletedImageIds.includes(slider._id)) // Exclude deleted images
-    .concat(updatedPayload.sliders)
-    .filter((value, index, self) =>
-      index === self.findIndex((t) => (t.image_url === value.image_url))
-    );
+    // Ensure existing sliders have uids
+    const existingSliders = existingPayload.sliders.map((slider, index) => ({
+      ...slider,
+      uid: slider.uid || `slider-${index + 1}`, // Ensure uid is present
+    }));
+
+    // Combine existing sliders with new ones
+    const mergedSliders = existingSliders
+      .filter(slider => !deletedImageIds.includes(slider._id)) // Exclude deleted images
+      .concat(updatedPayload.sliders.map((image, index) => ({
+        ...image,
+        uid: `slider-${existingSliders.length + index + 1}`, // Assign new uid based on existing length
+      })))
+      .filter((value, index, self) =>
+        index === self.findIndex((t) => (t.image_url === value.image_url))
+      );
 
     const payloadToUpload = {
       ...existingPayload,
       sliders: mergedSliders,
-
       ...subImagesData.reduce((acc, item, index) => {
-        if(item && item.image_url){
-           acc[`product_${index + 1}`] = {
+        if (item && item.image_url) {
+          acc[`product_${index + 1}`] = {
             uid: `product-${index + 1}`,
             image_url: item.image_url,
             alt_text: item.alt_text || `Product ${index + 1}`,
@@ -173,17 +310,44 @@ const TrandingNow = () => {
         }
         return acc;
       }, {})
+
     };
-    const editApi = `https://fm.skyhub.pk/api/v1/pages/home/trending-now/${existingPayload._id}`;
+
+    console.log("Payload to upload:", payloadToUpload);
+
+
+    // Define the edit API endpoint
+    const editApi = `https://fm.skyhub.pk/api/v1/pages/home/trending-now/${existingId}`;
     try {
-      const response = await axios.put(editApi, {...payloadToUpload, id: existingPayload._id});
+      const response = await axios.put(editApi, payloadToUpload);
       console.log("Edit images response", response.data);
+      setCheckCMSData(response.data); // Update state with the newly saved data
+      getTrandingNowCMSData()
     } catch (error) {
-      console.error("updating data error", error);
+      console.error("Updating data error", error);
     }
-  }
+  };
 
   // send payload to cms
+
+  //   const editTrandingData = async (existingId) => {
+  //   const updatedPayload = createTrandingNowCMSPayload();
+  //   const editApi = `https://fm.skyhub.pk/api/v1/pages/home/trending-now/${existingId}`;
+
+  //   try {
+  //     const response = await axios.put(editApi, updatedPayload);
+  //     // Update the state with the response data immediately
+  //     setCheckCMSData(response.data);
+  //     // Update local state to reflect changes immediately
+  //     const mergedSliders = [...checkCMSData.sliders, ...updatedPayload.sliders];
+  //     setCheckCMSData((prev) => ({ ...prev, sliders: mergedSliders }));
+  //   } catch (error) {
+  //     console.error("Updating data error", error);
+  //   }
+  // };
+
+
+
   const sendTrandingNowData = async (payload) => {
     const trandingNowApi = `https://fm.skyhub.pk/api/v1/pages/home/trending-now/add`;
     try {
@@ -194,27 +358,16 @@ const TrandingNow = () => {
     }
   }
 
-  // check payload structure and call api to send data
-  // const handleSaveClick = () => {
-  //   const payload = createTrandingNowCMSPayload();
-  //   if (payload.sliders.length >= 2 && Object.keys(payload).length > 1) {
-  //     sendTrandingNowData(payload); 
-  //   } else {
-  //     console.error("Payload is not valid:", payload);
-  //   }
-  // };
-
-  // Handle save click to determine whether to add or edit
+  // Call this function with the existing ID when saving
   const handleSaveClick = () => {
-    const payload = createTrandingNowCMSPayload();
-    if (checkCMSData) {
-      // If CMS data exists, call edit function
-      editTrandingData();
+    const payload = createTrandingNowCMSPayload()
+    if (checkCMSData && checkCMSData._id) {
+      editTrandingData(checkCMSData._id);
+      getTrandingNowCMSData()
     } else if (payload.sliders.length >= 2) {
-      // If CMS is empty, call existing add function
-      sendTrandingNowData(payload); // Your existing add function should be implemented here
+      sendTrandingNowData(payload)
     } else {
-      console.error("Not enough images to save");
+      console.error("No existing ID found for update.");
     }
   };
 
@@ -223,6 +376,7 @@ const TrandingNow = () => {
     setSelectedImageIndex(index);
     setModalView(true);
   }
+
   const handleModalClose = () => {
     setModalView(false)
   }
@@ -237,14 +391,14 @@ const TrandingNow = () => {
       <div className='tranding-now-body-top'>
         <div className='tranding-now-body-main-container'>
           <div className='tranding-now-main-image-slider'>
-            {checkCMSData && 
-            checkCMSData.sliders && 
-            checkCMSData.sliders.length > 0 ? (
+            {checkCMSData &&
+              checkCMSData.sliders &&
+              checkCMSData.sliders.length > 0 ? (
               <div className='tranding-now-slider-container'>
                 <div className='tranding-now-slider'
-                  style={{ 
-                    transform: `translateX(-${trandingNowMainImageIndex * 100}%)`, 
-                    transition: 'transform 0.5s ease' 
+                  style={{
+                    transform: `translateX(-${trandingNowMainImageIndex * 100}%)`,
+                    transition: 'transform 0.5s ease'
                   }}
                 >
                   {checkCMSData.sliders.map((image, index) => (
@@ -253,20 +407,20 @@ const TrandingNow = () => {
                       key={index}
                     >
                       <div className='tranding-now-slider-body-selected-images-slider'>
-                        <button 
-                          className='image-slider-image-delete' 
+                        <button
+                          className='image-slider-image-delete'
                           onClick={() => handleImageDelete(image._id)}
-                          /* onClick={() => handleImageDelete(image._id)} */ 
+                        /* onClick={() => handleImageDelete(image._id)} */
                         >
-                          <img 
-                            src={crossBtn} 
-                            alt='delete-btn' 
+                          <img
+                            src={crossBtn}
+                            alt='delete-btn'
                           />
                         </button>
-                        <img 
-                          src={`${url}${image.image_url}`} 
-                          alt={`Selected ${index + 1}`} 
-                          className='tranding-now-image-slider-image' 
+                        <img
+                          src={`${url}${image.image_url}`}
+                          alt={`Selected ${index + 1}`}
+                          className='tranding-now-image-slider-image'
                         />
                       </div>
                     </div>
@@ -288,75 +442,128 @@ const TrandingNow = () => {
                 </div>
               </div>
             ) : (
-              <div 
-                className='tranding-now-main-image-upload' 
+              <div
+                className='tranding-now-main-image-upload'
                 onClick={() => handleModalOpen(null)}
               >
-                <img 
-                  src={imageUploadIcon} 
-                  alt='image-upload' 
+                <img
+                  src={imageUploadIcon}
+                  alt='image-upload'
                 />
               </div>
             )}
           </div>
           <div className='tranding-now-sub-images'>
-            {checkCMSData && 
-              (checkCMSData.product_1 || 
-              checkCMSData.product_2 || 
-              checkCMSData.product_3 || 
-              checkCMSData.product_4 || 
-              checkCMSData.product_5 || 
-              checkCMSData.product_6) ? (
+            {checkCMSData &&
+              (checkCMSData.product_1 ||
+                checkCMSData.product_2 ||
+                checkCMSData.product_3 ||
+                checkCMSData.product_4 ||
+                checkCMSData.product_5 ||
+                checkCMSData.product_6) ? (
               // Display existing sub-images from checkCMSData
+              // <>
+              //   {Array.from({ length: 6 }).map((_, index) => {
+              //     const product = checkCMSData[`product_${index + 1}`];
+              //     return product ? (
+              //       <div 
+              //         className='sub-image-single-show' 
+              //         // onClick={() => handleModalOpen(index)}
+              //         key={index}>
+              //         <button className='close-sub-image-btn' onClick={() => handleSubImageDelete(index)}>
+              //           <img 
+              //             src={crossBtn} 
+              //             alt='close-sub-item' 
+              //           />
+              //         </button>
+              //         <img 
+              //           src={`${url}${product.image_url}`} 
+              //           alt={product.alt_text || `Product ${index + 1}`} 
+              //           className='product-sub-image' 
+              //         />
+              //       </div>
+              //     ) : null;
+              //   })}
+              // </>
               <>
                 {Array.from({ length: 6 }).map((_, index) => {
                   const product = checkCMSData[`product_${index + 1}`];
                   return product ? (
-                    <div 
-                      className='sub-image-single-show' 
-                      key={index}>
-                      <button className='close-sub-image-btn'>
-                        <img 
-                          src={crossBtn} 
-                          alt='close-sub-item' 
-                        />
+                    <div className='sub-image-single-show' key={index}>
+                      <button className='close-sub-image-btn' onClick={() => handleSubImageDelete(index)}>
+                        <img src={crossBtn} alt='close-sub-item' />
                       </button>
-                      <img 
-                        src={`${url}${product.image_url}`} 
-                        alt={product.alt_text || `Product ${index + 1}`} 
-                        className='product-sub-image' 
+                      <img
+                        src={`${url}${product.image_url}`}
+                        alt={product.alt_text || `Product ${index + 1}`}
+                        className='product-sub-image'
                       />
                     </div>
-                  ) : null;
+                  ) : (
+                    // Show upload icon if the product is null
+                    <div className='sub-image-single-show' key={index} onClick={() => handleModalOpen(index)}>
+                      <img
+                        src={imageUploadIcon}
+                        alt={`Upload Image ${index + 1}`}
+                        className='product-sub-upload-image'
+                      />
+                    </div>
+                  );
                 })}
               </>
             ) : (
               // Fallback to rendering subImagesData
+              // subImagesData.map((item, index) => (
+              //   <div 
+              //     className={`tranding-now-sub-image-item ${item?.image_url ? 'remove-padding' : 'add-padding'}`} 
+              //     key={index} 
+              //     onClick={() => handleModalOpen(index)}
+              //   >
+              //     {item?.image_url ? (
+              //       <div className='sub-image-single-show'>
+              //         <button className='close-sub-image-btn'>
+              //           <img 
+              //             src={crossBtn} 
+              //             alt='close-sub-item' 
+              //           />
+              //         </button>
+              //         <img 
+              //           src={`${url}${item.image_url}`} 
+              //           alt={item?.alt_text || `Image ${index}`} 
+              //           className='product-sub-image' 
+              //         />
+              //       </div>
+              //     ) : (
+              //       <img 
+              //         src={imageUploadIcon} 
+              //         alt={item?.alt_text || `Image ${index}`} 
+              //         className='product-sub-upload-image' 
+              //       />
+              //     )}
+              //   </div>
+              // ))
               subImagesData.map((item, index) => (
-                <div 
-                  className={`tranding-now-sub-image-item ${item?.image_url ? 'remove-padding' : 'add-padding'}`} 
-                  key={index} 
+                <div
+                  className={`tranding-now-sub-image-item ${item?.image_url ? 'remove-padding' : 'add-padding'}`}
+                  key={index}
                   onClick={() => handleModalOpen(index)}
                 >
                   {item?.image_url ? (
                     <div className='sub-image-single-show'>
-                      <button className='close-sub-image-btn'>
-                        <img 
-                          src={crossBtn} 
-                          alt='close-sub-item' 
-                        />
+                      <button className='close-sub-image-btn' onClick={() => handleSubImageDelete(index)}>
+                        <img src={crossBtn} alt='close-sub-item' />
                       </button>
-                      <img 
-                        src={`${url}${item.image_url}`} 
-                        alt={item?.alt_text || `Image ${index}`} 
-                        className='product-sub-image' 
+                      <img
+                        src={`${url}${item.image_url}`}
+                        alt={item?.alt_text || `Image ${index}`}
+                        className='product-sub-image'
                       />
                     </div>
                   ) : (
-                    <img 
-                      src={imageUploadIcon} 
-                      alt={item?.alt_text || `Image ${index}`} 
-                      className='product-sub-upload-image' 
+                    <img
+                      src={imageUploadIcon}
+                      alt={item?.alt_text || `Image ${index}`}
+                      className='product-sub-upload-image'
                     />
                   )}
                 </div>
