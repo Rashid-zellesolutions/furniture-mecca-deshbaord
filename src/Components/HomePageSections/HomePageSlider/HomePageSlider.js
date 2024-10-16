@@ -1,23 +1,20 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import './HomePageSlider.css'
 import axios from 'axios';
-import Loader from '../../UI-Controls/Loader/Loader';
 
-import loaderOne  from '../../../Assets/Images/loader.gif'
+// icons and images
+import loaderOne from '../../../Assets/Images/loader.gif'
 
-// icons
-import CMSMain from '../../CMSMain/CMSMain';
+// util functions
+import { url } from '../../../Services/Api';
+import { uploadImage } from '../../../Services/functions';
+
+// Components
+import MainLoader from '../../UI-Controls/MainLoader/MainLoader';
 import CMSHead from '../../UI-Controls/CMSHead/CMSHead';
 import CMSBody from '../../CMSBody/CMSBody';
-// import ImageGalleryPopup from '../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup';
 import ImageGalleryPopup from '../../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup';
 import InfoPopUp from '../../InfoPopUp/InfoPopUp';
-// import useLoader from '../../../Services/LoaderHook';
-import { url } from '../../../Services/Api';
-// import { uploadImage } from '../../../Services/functions';
-import { uploadImage } from '../../../Services/functions';
-import { useLoader } from '../../../Context/ComponentContext/LoaderContext';
-import MainLoader from '../../UI-Controls/MainLoader/MainLoader';
 
 const HomePageSlider = () => {
   const [infoModal, setInfoModal] = useState(false);
@@ -28,23 +25,36 @@ const HomePageSlider = () => {
   const [homeSliderImagesFromApi, setHomeSliderImagesFromApi] = useState([])
   const [combinedImages, setCombinedIMages] = useState([])
   const [deletedImagesIds, setDeletedImagesIds] = useState([])
-  // const {showLoader, hideLoader} = useLoader()
-  const showLoader = () => {setLoading(true)}
-  const hideLoader = () => {setLoading(false)}
+  const showLoader = () => { setLoading(true) }
+  const hideLoader = () => { setLoading(false) }
 
-  // gallery modal imports
-  const [data, setData] = useState([])
-
-  // Gallery Modal
+  // all modals 
+  // Gallery modal
   const handleModalOpen = () => {
     setModalView(true)
   }
+  const handleModalClose = () => {
+    setModalView(false)
+  }
+
+  // info modal
+  const handeShowInfoModal = () => {
+    setInfoModal(true)
+  }
+  const handleCloseInfoModal = () => {
+    setInfoModal(false);
+  }
+
+  // Payload
   const [imageSendPayload, setImageSendPayload] = useState({
-      file: null,
-      alt_text: '',
-      title: '',
-      description: '',
+    file: null,
+    alt_text: '',
+    title: '',
+    description: '',
   })
+
+  // gallery modal imports
+  const [data, setData] = useState([])
 
   // get image for home slider media 
   const getApi = async () => {
@@ -54,17 +64,15 @@ const HomePageSlider = () => {
       setData(response.data.homeSliders)
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
     }
   }
-
   useEffect(() => {
     getApi()
   }, [])
 
-   // Get Images from api 
-
-   const getHomeSliderImagesFRomApi = async () => {
+  // Get Images from api 
+  const getHomeSliderImagesFRomApi = async () => {
     try {
       const response = await axios.get('https://fm.skyhub.pk/api/v1/pages/home/slider/get')
       setHomeSliderImagesFromApi(response.data.homeSliders)
@@ -74,53 +82,36 @@ const HomePageSlider = () => {
       console.error("error geting slider images", error);
     }
   }
-
   useEffect(() => {
     getHomeSliderImagesFRomApi()
   }, [])
-
-  const handleModalClose = () => {
-    setModalView(false)
-  }
-
 
   // handleFileChange
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     const api = `${url}/api/v1/media/pages/home/slider/add`
 
-    if(file){
-        setImageSendPayload((prevData) => ({
-            ...prevData,
-            file: file,
-        }));
-        setUploadedStates('loading');
-        alert('wait');
-        const imagePayloadToSend = new FormData();
-        imagePayloadToSend.append('image', file);
-        imagePayloadToSend.append('alt_text', imageSendPayload.alt_text);
-        imagePayloadToSend.append('title', imageSendPayload.title);
-        imagePayloadToSend.append('description', imageSendPayload.description);
-        imagePayloadToSend.append('image_url', imageSendPayload.image_url);
-        imagePayloadToSend.append('link_url', imageSendPayload.link_url);
-
-        await uploadImage(imagePayloadToSend, api, setUploadedStates)
+    if (file) {
+      setImageSendPayload((prevData) => ({
+        ...prevData,
+        file: file,
+      }));
+      setUploadedStates('loading');
+      alert('wait');
+      const imagePayloadToSend = new FormData();
+      imagePayloadToSend.append('image', file);
+      imagePayloadToSend.append('alt_text', imageSendPayload.alt_text);
+      imagePayloadToSend.append('title', imageSendPayload.title);
+      imagePayloadToSend.append('description', imageSendPayload.description);
+      imagePayloadToSend.append('image_url', imageSendPayload.image_url);
+      imagePayloadToSend.append('link_url', imageSendPayload.link_url);
+      await uploadImage(imagePayloadToSend, api, setUploadedStates)
 
     }
     console.log("handleChange file", file);
   }
 
-  // info modal
-  const handeShowInfoModal = () => {
-    setInfoModal(true)
-  }
-
-  const handleCloseInfoModal = () => {
-    setInfoModal(false);
-  }
-
   // get images in homepage slider 
-
   const handleImageSelect = (image) => {
     setSelectedImage((prevImages) => {
       const newSelectedIMages = [...prevImages, image];
@@ -131,25 +122,21 @@ const HomePageSlider = () => {
   };
 
   // set all images to combiled state 
-
   const updateCombinedImages = (apiImages, selectedImages) => {
     const newCombinedImages = [...apiImages, ...selectedImages];
     setCombinedIMages(newCombinedImages)
   }
 
- 
-
   // Delete Image from temporary and api
-
   const handleImageDelete = (id) => {
     const existsInApiImage = homeSliderImagesFromApi.some(image => image._id === id);
     setCombinedIMages((prevImages) => {
       const updatedImages = prevImages.filter((image) => image._id !== id);
 
-      if(!existsInApiImage){
-        setSelectedImage((prevSelected) => prevSelected.filter(image => image._id !== id)) 
+      if (!existsInApiImage) {
+        setSelectedImage((prevSelected) => prevSelected.filter(image => image._id !== id))
       }
-      
+
       setDeletedImagesIds((prevDeletedIds) => {
         // Only add the ID to deletedImagesIds if it's from the API
         if (existsInApiImage && !prevDeletedIds.includes(id)) {
@@ -158,22 +145,20 @@ const HomePageSlider = () => {
         // If the image is temporary, don't add it to deletedImagesIds
         return prevDeletedIds;
       });
-      
+
       return updatedImages;
     });
   };
 
   // Add bulk 
-
   const sendImagesHomeSlider = async () => {
-      
     try {
       // Filter selected images to post
       const imagesToPost = selectedImage.filter(image => !deletedImagesIds.includes(image._id));
-  
+
       // Find only the IDs that need to be deleted from the API
       const apiImagesToDelete = deletedImagesIds.filter(id => homeSliderImagesFromApi.some(image => image._id === id));
-  
+
       if (apiImagesToDelete.length > 0) {
         try {
           showLoader()
@@ -184,7 +169,7 @@ const HomePageSlider = () => {
           console.error("Error during delete images from API:", error);
         }
       }
-  
+
       // Proceed to post images that are not deleted
       if (imagesToPost.length > 0) {
         showLoader()
@@ -198,17 +183,17 @@ const HomePageSlider = () => {
       }
     } catch (error) {
       console.error("Error sending data:", error);
-    } 
+    }
 
   };
-  
+
   const deleteImagesBulk = async (ids) => {
-    return axios.post(`https://fm.skyhub.pk/api/v1/pages/home/slider/delete-bulk`, ids , {
+    return axios.post(`https://fm.skyhub.pk/api/v1/pages/home/slider/delete-bulk`, ids, {
       headers: {
         'Content-Type': 'application/json', // Ensure the content type is set
       }
     });
-    
+
   }
 
   const posImagesToHomeSlider = async (images) => {
@@ -223,43 +208,40 @@ const HomePageSlider = () => {
     })
   }
 
-  // console.log("home page Data", data)
-
   return (
-        <div className='SlderMainSection'>
-          {loading && <MainLoader loaderGif={loaderOne} />}
-        <CMSHead
-          heading={'Home Page Slider'}
-          buttonText={'Save'}
-          sendImagesHomeSlider={sendImagesHomeSlider}
-          handeShowInfoModal={handeShowInfoModal}
-        />
+    <div className='SlderMainSection'>
+      {loading && <MainLoader loaderGif={loaderOne} />}
+      <CMSHead
+        heading={'Home Page Slider'}
+        buttonText={'Save'}
+        sendImagesHomeSlider={sendImagesHomeSlider}
+        handeShowInfoModal={handeShowInfoModal}
+      />
 
-        <CMSBody 
-          bodyText={'Upload Image'}
-          selectedImage={combinedImages}
-          handleModalOpen={handleModalOpen}
-          handleImageDelete={handleImageDelete}
-          setModalView={setModalView}
-        />
+      <CMSBody
+        bodyText={'Upload Image'}
+        selectedImage={combinedImages}
+        handleModalOpen={handleModalOpen}
+        handleImageDelete={handleImageDelete}
+        setModalView={setModalView}
+      />
 
-        <ImageGalleryPopup 
-          showImageGalleryPopUp={modalView}
-          handleModalView={handleModalClose}
-          onImageSelect={handleImageSelect}
-          imageSendPayload={imageSendPayload}
-          setImageSendPayload={setImageSendPayload}
-          alt_text={imageSendPayload.alt_text}
-          title={imageSendPayload.title}
-          data={data}
-          handleFileChange={handleFileChange}
-          // addImageToHomeSliderApi={`/api/v1/media/pages/home/slider/add`}
-        />
-        <InfoPopUp 
-          showInfoModal={infoModal}
-          handleCloseInfoModal={handleCloseInfoModal} 
-        />
-      </div>
+      <ImageGalleryPopup
+        showImageGalleryPopUp={modalView}
+        handleModalView={handleModalClose}
+        onImageSelect={handleImageSelect}
+        imageSendPayload={imageSendPayload}
+        setImageSendPayload={setImageSendPayload}
+        alt_text={imageSendPayload.alt_text}
+        title={imageSendPayload.title}
+        data={data}
+        handleFileChange={handleFileChange}
+      />
+      <InfoPopUp
+        showInfoModal={infoModal}
+        handleCloseInfoModal={handleCloseInfoModal}
+      />
+    </div>
   )
 }
 

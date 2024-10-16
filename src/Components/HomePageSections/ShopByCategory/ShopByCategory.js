@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
 import './ShopByCategory.css'
-import explanationMark from '../../../Assets/Images/Frame.png';
-import eyeIcon from '../../../Assets/Images/hide-show.png'
-// import arrowDown from '../../../Assets/Images/dropdown 20 x 20.png'
 import CMSHead from '../../UI-Controls/CMSHead/CMSHead';
 import CategoryDropdown from '../../UI-Controls/CategoryDropdown/CategoryDropdown';
 
-const ShopByCategory = ({ categoryHeading }) => {
-    const [showCategories, setShowCategories] = useState(false);
+const ShopByCategory = () => {
     const selectCategoryData = [
         { name: 'None' },
         { name: 'Bedroom' },
@@ -17,21 +13,34 @@ const ShopByCategory = ({ categoryHeading }) => {
         { name: 'Matterasses' },
 
     ]
-    const handleCategories = () => {
-        setShowCategories(!showCategories)
+
+    // Multi Select
+    const [selectedCategories, setSelectedCategories] = useState(['']);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const toggleDropdown = (index) => {
+        setDropdownOpen((prev) => ({
+            ...prev,
+            [index]: !prev[index]
+        }));
+        console.log("toggle dropdown", dropdownOpen)
+    };
+    const handleSelect = (index, category) => {
+        const newCategory = [...selectedCategories];
+        newCategory[index] = category;
+        setSelectedCategories(newCategory);
+        setDropdownOpen(false);
+        console.log("handle select", dropdownOpen)
+        console.log("new category", newCategory)
+    }
+
+    const addDropdown = () => {
+        setSelectedCategories((prev) => [...prev, ''])
+    }
+    const deleteDropdown = (index) => {
+        setSelectedCategories((prev) => prev.filter((_, i) => i !== index));
     }
     return (
         <div className='CategoryMainSection'>
-            {/* <div className='CategoryHead'>
-            <div className='CategoryHeadLeft'>
-                <h3>{categoryHeading}</h3>
-                <img src={explanationMark} alt='icon' />
-            </div>
-            <div className='CategoryHeadRight'>
-                <img src={eyeIcon} alt='hide-show' />
-                <button>Save</button>
-            </div>
-        </div> */}
             <CMSHead
                 heading={'Shop By Category'}
                 buttonText={'Save'}
@@ -39,24 +48,16 @@ const ShopByCategory = ({ categoryHeading }) => {
             <div className='CategoryBody'>
                 <p className='category-heading'>Select Category</p>
                 <div className='category-fropdown-and-button'>
-                    {/* <div className='category-dropdown'>
-                        <div className='category-drop-down-head' onClick={handleCategories}>
-                            <p>Select Category</p>
-                            <img src={arrowDown} alt='arrow down' />
-                        </div>
-                        <div className={`categor-drop-down-items ${showCategories ? 'show-drop-down-items' : ''}`}>
-                            {selectCategoryData.map((item, index) => (
-                                <p key={index}>{item.name}</p>
-                            ))}
-                        </div>
-                    </div> */}
-                    <CategoryDropdown 
-                        handleCategories={handleCategories}
+                    <CategoryDropdown
                         selectCategoryData={selectCategoryData}
-                        showCategories={showCategories}
+                        selectedCategories={selectedCategories}
+                        toggleDropdown={toggleDropdown}
+                        dropdownOpen={dropdownOpen}
+                        handleSelect={handleSelect}
+                        deleteDropdown={deleteDropdown}
                     />
                     <div className='add-category-btn-div'>
-                        <button>
+                        <button onClick={addDropdown}>
                             + Add
                         </button>
                     </div>

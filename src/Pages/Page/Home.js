@@ -1,8 +1,4 @@
 import React, { useState } from 'react';
-// import '../../Page.css';
-// import '../Components/HomePageSlider/HomePageSlider.css';
-// import '../../Pages/ECommerce/ECommerce.css';
-
 import TrandingNow from '../../Components/HomePageSections/TrandingNow/TrandingNow';
 import BestSellerSection from '../../Components/HomePageSections/BestSellerSection/BestSellerSection';
 import FinancingBanner from '../../Components/HomePageSections/FinancingBanner/FinancingBanner';
@@ -10,21 +6,19 @@ import AdvertisingBanner from '../../Components/HomePageSections/AdvertisingBann
 import DealOfMonth from '../../Components/HomePageSections/DealOfMonth/DealOfMonth';
 import FurnitureForBudget from '../../Components/HomePageSections/FurnitureForBudget/FurnitureForBudget';
 import FinanceSlider from '../../Components/HomePageSections/FinanceSlider/FinanceSlider';
-// import HomePageSlider from '../../Components/HomePageSections/HomePageSlider/HomePageSlider';
 import HomePageSlider from '../../Components/HomePageSections/HomePageSlider/HomePageSlider';
-import ShopByCategory from '../../Components/HomePageSections/ShopByCategory/ShopByCategory';
-import Loader from '../../Components/UI-Controls/Loader/Loader';
+import ShopByCategory from '../../Components/HomePageSections/ShopByCategory/ShopByCategory'
 import MainLoader from '../../Components/UI-Controls/MainLoader/MainLoader';
 import useLoader from '../../Services/LoaderHook';
 
 const HomePage = () => {
   const { loading } = useLoader()
 
-  
+
   return (
-    <div className="HomePage" style={{gap: '20px'}}>
-      {loading ? ( 
-        <MainLoader /> ) :
+    <div className="HomePage" style={{ gap: '20px' }}>
+      {loading ? (
+        <MainLoader />) :
         (
           <>
             <HomePageSlider />
@@ -36,8 +30,8 @@ const HomePage = () => {
             <AdvertisingBanner />
             <DealOfMonth />
             <FurnitureForBudget />
-      </>
-      )}
+          </>
+        )}
     </div >
   );
 };

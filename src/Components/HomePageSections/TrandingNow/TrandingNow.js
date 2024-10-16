@@ -16,9 +16,7 @@ const TrandingNow = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [trandingNowMainImages, setTrandingNowMainImages] = useState([])
   const [subImagesData, setSubImagesData] = useState(Array(6).fill(null));
-  // const [combinedTrandingNowImages, setCombinedTrandingNowImages] = useState(null);
   const [checkCMSData, setCheckCMSData] = useState(null);
-  // Track IDs for the images to allow deletions
   const [deletedImageIds, setDeletedImageIds] = useState([]);
 
   const handleImageDelete = async (imageId) => {
@@ -88,121 +86,28 @@ const TrandingNow = () => {
     console.log("handleChange file", file);
   }
 
-  // const handleImageSelect = (selectedImage) => {
-  // const newSelectedImage = selectedImage;
-  // console.log('Selected Image:', newSelectedImage);
-
-  // // Assuming subImagesData is managed properly
-  // setSubImagesData((prevData) => {
-  //   const newData = [...prevData];
-  //   // Add the selected image to the appropriate index
-  //   if (selectedImageIndex !== null) {
-  //     newData[selectedImageIndex] = newSelectedImage; // Replace
-  //   } else {
-  //     newData.push(newSelectedImage); // Add new
-  //   }
-  //   return newData;
-  // });
-
-  // // Optionally, update the checkCMSData if the new image should also reflect there
-  // setCheckCMSData((prevData) => ({
-  //   ...prevData,
-  //   sliders: [...prevData.sliders, newSelectedImage] // Add to existing sliders if needed
-  // }));
-  // };
-
-
-  //   const handleImageSelect = (selectedImage) => {
-  //   console.log('Selected Image:', selectedImage);
-
-  //   setSubImagesData((prevData) => {
-  //     const newData = [...prevData];
-
-  //     if (selectedImageIndex !== null) {
-  //       // Replace the existing image at the selected index
-  //       newData[selectedImageIndex] = selectedImage;
-  //     } else {
-  //       // If no index is selected, push the new image
-  //       newData.push(selectedImage);
-  //     }
-
-  //     return newData;
-  //   });
-
-  //   setCheckCMSData((prevData) => ({
-  //     ...prevData,
-  //     sliders: [...prevData.sliders, selectedImage], // Adjust if you want to reflect this in sliders
-  //     [`product_${selectedImageIndex + 1}`]: selectedImage // Update specific product entry
-  //   }));
-  // };
-
   const handleImageSelect = (selectedImage) => {
-  console.log('Selected Image:', selectedImage);
 
-  // Update the specific product entry in checkCMSData for sub-images
-  if (selectedImageIndex !== null) {
-    setSubImagesData((prevData) => {
-      const newData = [...prevData];
-      newData[selectedImageIndex] = selectedImage; // Replace the existing image
-      return newData;
-    });
+    // Update the specific product entry in checkCMSData for sub-images
+    if (selectedImageIndex !== null) {
+      setSubImagesData((prevData) => {
+        const newData = [...prevData];
+        newData[selectedImageIndex] = selectedImage; // Replace the existing image
+        return newData;
+      });
 
-    setCheckCMSData((prevData) => ({
-      ...prevData,
-      [`product_${selectedImageIndex + 1}`]: selectedImage // Update specific product entry
-    }));
-  } else {
-    // Logic for updating sliders when no selectedImageIndex is defined (if applicable)
-    setCheckCMSData((prevData) => ({
-      ...prevData,
-      sliders: [...prevData.sliders, selectedImage] // Add new slider if needed
-    }));
-  }
-};
-
-
-  // Update the image selection logic to replace the upload icon with the newly uploaded image
-  // const handleImageSelect = (selectedImage) => {
-  //   console.log('Selected Image:', selectedImage);
-
-  //   setSubImagesData((prevData) => {
-  //     const newData = [...prevData];
-
-  //     if (selectedImageIndex !== null) {
-  //       // Replace the existing image at the selected index
-  //       newData[selectedImageIndex] = selectedImage;
-  //     } else {
-  //       // If no index is selected, push the new image
-  //       newData.push(selectedImage);
-  //     }
-
-  //     return newData;
-  //   });
-
-  //   // Optionally, update checkCMSData if needed
-  //   setCheckCMSData((prevData) => ({
-  //     ...prevData,
-  //     [`product_${selectedImageIndex + 1}`]: selectedImage // Update specific product entry
-  //   }));
-  // };
-
-
-  // Handle image selection
-  // const handleImageSelect = (selectedImage) => {
-  //   console.log('Selected Image:', selectedImage);
-
-  //   if (selectedImageIndex !== null) {
-  //     // Replace the existing image at the selected index
-  //     setSubImagesData((prevData) => {
-  //       const newData = [...prevData];
-  //       newData[selectedImageIndex] = selectedImage;
-  //       return newData;
-  //     });
-  //   }
-
-  //   // Optionally, you can close the modal here
-  //   handleModalClose();
-  // };
+      setCheckCMSData((prevData) => ({
+        ...prevData,
+        [`product_${selectedImageIndex + 1}`]: selectedImage // Update specific product entry
+      }));
+    } else {
+      // Logic for updating sliders when no selectedImageIndex is defined (if applicable)
+      setCheckCMSData((prevData) => ({
+        ...prevData,
+        sliders: [...prevData.sliders, selectedImage] // Add new slider if needed
+      }));
+    }
+  };
 
   const getTrandingNowMediaImages = async () => {
     try {
@@ -329,24 +234,6 @@ const TrandingNow = () => {
   };
 
   // send payload to cms
-
-  //   const editTrandingData = async (existingId) => {
-  //   const updatedPayload = createTrandingNowCMSPayload();
-  //   const editApi = `https://fm.skyhub.pk/api/v1/pages/home/trending-now/${existingId}`;
-
-  //   try {
-  //     const response = await axios.put(editApi, updatedPayload);
-  //     // Update the state with the response data immediately
-  //     setCheckCMSData(response.data);
-  //     // Update local state to reflect changes immediately
-  //     const mergedSliders = [...checkCMSData.sliders, ...updatedPayload.sliders];
-  //     setCheckCMSData((prev) => ({ ...prev, sliders: mergedSliders }));
-  //   } catch (error) {
-  //     console.error("Updating data error", error);
-  //   }
-  // };
-
-
 
   const sendTrandingNowData = async (payload) => {
     const trandingNowApi = `https://fm.skyhub.pk/api/v1/pages/home/trending-now/add`;
@@ -512,36 +399,6 @@ const TrandingNow = () => {
                 })}
               </>
             ) : (
-              // Fallback to rendering subImagesData
-              // subImagesData.map((item, index) => (
-              //   <div 
-              //     className={`tranding-now-sub-image-item ${item?.image_url ? 'remove-padding' : 'add-padding'}`} 
-              //     key={index} 
-              //     onClick={() => handleModalOpen(index)}
-              //   >
-              //     {item?.image_url ? (
-              //       <div className='sub-image-single-show'>
-              //         <button className='close-sub-image-btn'>
-              //           <img 
-              //             src={crossBtn} 
-              //             alt='close-sub-item' 
-              //           />
-              //         </button>
-              //         <img 
-              //           src={`${url}${item.image_url}`} 
-              //           alt={item?.alt_text || `Image ${index}`} 
-              //           className='product-sub-image' 
-              //         />
-              //       </div>
-              //     ) : (
-              //       <img 
-              //         src={imageUploadIcon} 
-              //         alt={item?.alt_text || `Image ${index}`} 
-              //         className='product-sub-upload-image' 
-              //       />
-              //     )}
-              //   </div>
-              // ))
               subImagesData.map((item, index) => (
                 <div
                   className={`tranding-now-sub-image-item ${item?.image_url ? 'remove-padding' : 'add-padding'}`}

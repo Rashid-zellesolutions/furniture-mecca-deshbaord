@@ -36,15 +36,6 @@ const CMSBody = ({ bodyText, selectedImage, handleModalOpen, handleImageDelete, 
                             </div>
                         ))}
                     </div>
-                    {/* <div className='pagination'>
-                        {selectedImage.map((_, index) => (
-                            <button
-                                key={index}
-                                className={`dot ${index === currentIndex ? 'active' : ''}`}
-                                onClick={() => setCurrentIndex(index)}
-                            ></button>
-                        ))}
-                    </div> */}
                 </div>
             )}
             <div className={`SliderAddNewImageBtnDiv ${selectedImage.length === 0 ? 'show-add-more-btn' : ''}`}>

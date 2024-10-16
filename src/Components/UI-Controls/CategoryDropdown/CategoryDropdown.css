@@ -1,3 +1,29 @@
+.category-dropdown-and-delete-icon{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    box-sizing: border-box;
+    gap: 20px;
+}
+
+.category-dropdown-and-delete-icon .delete-button{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.category-dropdown-and-delete-icon .delete-button img{
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+}
+
 .category-dropdown{
     display: flex;
     width: 320px;

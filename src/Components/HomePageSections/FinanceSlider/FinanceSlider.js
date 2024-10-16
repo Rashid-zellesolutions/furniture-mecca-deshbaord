@@ -7,7 +7,6 @@ import InfoPopUp from '../../InfoPopUp/InfoPopUp';
 import axios from 'axios';
 import { url } from '../../../Services/Api';
 import { uploadImage } from '../../../Services/functions';
-import { useLoader } from '../../../Context/ComponentContext/LoaderContext';
 import loaderTwo from '../../../Assets/Images/loader-check-one.gif'
 import MainLoader from '../../UI-Controls/MainLoader/MainLoader';
 
@@ -20,10 +19,9 @@ const FinanceSlider = () => {
   const [combinedImages, setCombinedImages] = useState([]); // Fixed typo in state variable name
   const [data, setData] = useState([]);
   const [deletedImagesIds, setDeletedImagesIds] = useState([]);
-  // const {showLoader, hideLoader} = useLoader()
   const [loader, setLoader] = useState(false);
-  const showLoader = () => {setLoader(true)}
-  const hideLoader = () => {setLoader(false)}
+  const showLoader = () => { setLoader(true) }
+  const hideLoader = () => { setLoader(false) }
 
   const [imageSendPayload, setImageSendPayload] = useState({
     image_url: '',
@@ -55,16 +53,15 @@ const FinanceSlider = () => {
     getApi();
   }, []);
 
-
   // Get images for finance slider
   const getHomeSliderImagesFromApi = async () => {
     try {
       const response = await axios.get('https://fm.skyhub.pk/api/v1/pages/home/finance-slider/get');
-      const { homeSliders } = response.data; 
+      const { homeSliders } = response.data;
       setHomeSliderImagesFromApi(homeSliders);
       updateCombinedImages(homeSliders, selectedImage);
     } catch (error) {
-      console.error("Error getting slider images:", error); 
+      console.error("Error getting slider images:", error);
     }
   };
 
@@ -81,49 +78,32 @@ const FinanceSlider = () => {
     setModalView(false);
   };
 
-
-
   // handleFilleChange
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     const api = `${url}/api/v1/media/pages/home/finance/add`
 
-    if(file){
-        setImageSendPayload((prevData) => ({
-            ...prevData,
-            file: file,
-        }));
-        setUploadedStates('loading');
-        alert('wait');
-        const imagePayloadToSend = new FormData();
-        imagePayloadToSend.append('image', file);
-        imagePayloadToSend.append('alt_text', imageSendPayload.alt_text);
-        imagePayloadToSend.append('title', imageSendPayload.title);
-        imagePayloadToSend.append('description', imageSendPayload.description);
-        imagePayloadToSend.append('image_url', imageSendPayload.image_url);
-        imagePayloadToSend.append('link_url', imageSendPayload.link_url);
+    if (file) {
+      setImageSendPayload((prevData) => ({
+        ...prevData,
+        file: file,
+      }));
+      setUploadedStates('loading');
+      alert('wait');
+      const imagePayloadToSend = new FormData();
+      imagePayloadToSend.append('image', file);
+      imagePayloadToSend.append('alt_text', imageSendPayload.alt_text);
+      imagePayloadToSend.append('title', imageSendPayload.title);
+      imagePayloadToSend.append('description', imageSendPayload.description);
+      imagePayloadToSend.append('image_url', imageSendPayload.image_url);
+      imagePayloadToSend.append('link_url', imageSendPayload.link_url);
 
-        await uploadImage(imagePayloadToSend, api, setUploadedStates)
+      await uploadImage(imagePayloadToSend, api, setUploadedStates)
 
     }
     console.log("handleChange file", file);
   }
 
-  // const handleImageSelect = (image) => {
-  //   const formattedImage = {
-  //     image_url: image.image_url,
-  //     altText: image.alt_text,
-  //     title: image.title,
-  //     linkUrl: image.link_url, 
-  //     description: image.description,
-  //   };
-  //   setSelectedImage((prevImages) => {
-  //     const newSelectedImages = [...prevImages, formattedImage];
-  //     updateCombinedImages(homeSliderImagesFromApi, newSelectedImages);
-  //     return newSelectedImages;
-  //   });
-  //   setModalView(false);
-  // };
 
   const updateCombinedImages = (apiImages, selectedImages) => {
     const newCombinedImages = [...apiImages, ...selectedImages];
@@ -188,36 +168,28 @@ const FinanceSlider = () => {
   };
 
   const posImagesToHomeSlider = async (images) => {
-    // Create the payload in the desired format
-  // const updatedImages = images.map(image => ({
-  //   image_url: image.image_url, 
-  //   alt_text: image.altText,
-  //   title: image.title,
-  //   link_url: image.linkUrl, 
-  //   description: image.description,
-  //   uid: image._id
-  // }));
-  const updatedImages = images.map(image => ({
-    ...image,
-    uid: image._id,
-  }));
-  
-  console.log("Sending images to API:", JSON.stringify(updatedImages, null, 2)); // Log the payload
-  
-  try {
-    const response = await axios.post('https://fm.skyhub.pk/api/v1/pages/home/finance-slider/add-bulk', updatedImages, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
 
-    console.log("Response from API:", response.data); // Log the API response
-    return response.data; // Return the response data if needed
-  } catch (error) {
-    console.error("Error sending images to API:", error); // Log any errors
-    throw error; // Re-throw the error if you want to handle it further up the call stack
-  }
-};
+    const updatedImages = images.map(image => ({
+      ...image,
+      uid: image._id,
+    }));
+
+    console.log("Sending images to API:", JSON.stringify(updatedImages, null, 2)); // Log the payload
+
+    try {
+      const response = await axios.post('https://fm.skyhub.pk/api/v1/pages/home/finance-slider/add-bulk', updatedImages, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log("Response from API:", response.data); // Log the API response
+      return response.data; // Return the response data if needed
+    } catch (error) {
+      console.error("Error sending images to API:", error); // Log any errors
+      throw error; // Re-throw the error if you want to handle it further up the call stack
+    }
+  };
 
 
   return (
@@ -229,14 +201,14 @@ const FinanceSlider = () => {
         sendImagesHomeSlider={sendImagesHomeSlider}
         handleShowInfoModal={() => setInfoModal(true)}
       />
-      <CMSBody 
+      <CMSBody
         bodyText={'Upload Image'}
         selectedImage={combinedImages}
         handleModalOpen={handleModalOpen}
         handleImageDelete={handleImageDelete}
         setModalView={setModalView}
       />
-      <ImageGalleryPopup 
+      <ImageGalleryPopup
         showImageGalleryPopUp={modalView}
         handleModalView={handleModalClose}
         onImageSelect={handleImageSelect}
@@ -246,11 +218,10 @@ const FinanceSlider = () => {
         title={imageSendPayload.title}
         data={data}
         handleFileChange={handleFileChange}
-        // addImageToHomeSliderApi={`/api/v1/media/pages/home/finance/add`}
       />
-      <InfoPopUp 
+      <InfoPopUp
         showInfoModal={infoModal}
-        handleCloseInfoModal={() => setInfoModal(false)} 
+        handleCloseInfoModal={() => setInfoModal(false)}
       />
     </div>
   );
