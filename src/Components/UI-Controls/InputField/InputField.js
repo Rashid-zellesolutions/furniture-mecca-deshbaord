@@ -12,7 +12,7 @@ const InputField = ({
     value,
     name,
     onChange,
-    // readOnly
+    readOnly
 }) => {
 
   return (
@@ -28,7 +28,7 @@ const InputField = ({
             value={value} 
             name={name}
             onChange={onChange}
-            // readOnly={readOnly}
+            readOnly={readOnly}
              />
     </div>
   )

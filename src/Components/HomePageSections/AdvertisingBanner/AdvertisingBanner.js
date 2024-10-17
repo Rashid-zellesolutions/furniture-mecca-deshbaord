@@ -70,7 +70,8 @@ const AdvertisingBanner = () => {
         // title={imageSendPayload.title}
         // data={data}
         // handleFileChange={handleFileChange}
-      />
+      /> 
+      
     </div>
   )
 }
