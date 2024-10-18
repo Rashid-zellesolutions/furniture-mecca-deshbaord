@@ -3,12 +3,14 @@ import './AdvertisingBanner.css'
 import CMSHead from '../../UI-Controls/CMSHead/CMSHead'
 import uploadImageIcon from '../../../Assets/Images/uploadImg 48 x 48.png'
 import ImageGalleryPopup from '../../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup'
+import InfoPopUp from '../../InfoPopUp/InfoPopUp'
 
 const AdvertisingBanner = () => {
   const [modalView, setModalView] = useState(false);
   const [bannerHeading, setBannerHeading] = useState('')
   const [selectedImage, setSelectedImage] = useState([])
   const [bannerData, setBannerData] = useState([])
+  const [infoModal, setInfoModal] = useState(false);
   // Gallery modal
   const handleModalOpen = () => {
     setModalView(true)
@@ -16,6 +18,13 @@ const AdvertisingBanner = () => {
   const handleModalClose = () => {
     setModalView(false)
   }
+  // Modal open and close functions
+    const handeShowInfoModal = () => {
+        setInfoModal(true)
+    }
+    const handleCloseInfoModal = () => {
+        setInfoModal(false);
+    }
 
   // get images in homepage slider 
   const handleImageSelect = (image) => {
@@ -34,7 +43,7 @@ const AdvertisingBanner = () => {
     console.log("Banner Data", bannerData)
   }, [bannerHeading, selectedImage.image_url])
   useEffect(() => {
-    console.log(bannerData)
+    
   }, [bannerData])
 
   return (
@@ -42,6 +51,7 @@ const AdvertisingBanner = () => {
         <CMSHead 
             heading={bannerHeading.length > 0 ?  bannerHeading : "Advertising Banner"}
             buttonText={"Save"}
+            handeShowInfoModal={handeShowInfoModal}
         />
         <div className='advertising-banner-body-main'>
             <div className='advertising-banner-containt'>
@@ -71,7 +81,10 @@ const AdvertisingBanner = () => {
         // data={data}
         // handleFileChange={handleFileChange}
       /> 
-      
+      <InfoPopUp
+                showInfoModal={infoModal}
+                handleCloseInfoModal={handleCloseInfoModal}
+            />
     </div>
   )
 }

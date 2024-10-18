@@ -7,6 +7,7 @@ import { url } from '../../../Services/Api';
 import { uploadImage } from '../../../Services/functions';
 import axios from 'axios';
 import crossBtn from '../../../Assets/Images/cross-button-32-X-32.png'
+import InfoPopUp from '../../InfoPopUp/InfoPopUp';
 
 const TrandingNow = () => {
   const [modalView, setModalView] = useState(false);
@@ -18,6 +19,15 @@ const TrandingNow = () => {
   const [subImagesData, setSubImagesData] = useState(Array(6).fill(null));
   const [checkCMSData, setCheckCMSData] = useState(null);
   const [deletedImageIds, setDeletedImageIds] = useState([]);
+  const [infoModal, setInfoModal] = useState(false);
+
+  // modal open and close functions
+  const handeShowInfoModal = () => {
+        setInfoModal(true)
+    }
+    const handleCloseInfoModal = () => {
+        setInfoModal(false);
+    }
 
   const handleImageDelete = async (imageId) => {
     setDeletedImageIds((prev) => [...prev, imageId]); // Track deleted image ID
@@ -52,6 +62,7 @@ const TrandingNow = () => {
     alt_text: '',
     title: '',
     description: '',
+    link_url: '',
   });
 
   // upload image to tranding now media 
@@ -83,7 +94,6 @@ const TrandingNow = () => {
       }
 
     }
-    console.log("handleChange file", file);
   }
 
   const handleImageSelect = (selectedImage) => {
@@ -113,7 +123,6 @@ const TrandingNow = () => {
     try {
       const response = await axios.get('https://fm.skyhub.pk/api/v1/media/pages/home/trending/get');
       setMediaData(response.data.data)
-      console.log('tranding now media images response', response.data.data);
     } catch (error) {
       console.error('Error', error);
     }
@@ -126,11 +135,9 @@ const TrandingNow = () => {
   const getTrandingNowCMSData = async () => {
     try {
       const response = await axios.get('https://fm.skyhub.pk/api/v1/pages/home/trending-now/get');
-      console.log("existing payload of tranding now", response.data.data);
       if (response.data && response.data.data) {
         setCheckCMSData(response.data.data)
       }
-      console.log("check cms", checkCMSData)
     } catch (error) {
       console.error("error checking cms data", error);
     }
@@ -225,7 +232,6 @@ const TrandingNow = () => {
     const editApi = `https://fm.skyhub.pk/api/v1/pages/home/trending-now/${existingId}`;
     try {
       const response = await axios.put(editApi, payloadToUpload);
-      console.log("Edit images response", response.data);
       setCheckCMSData(response.data); // Update state with the newly saved data
       getTrandingNowCMSData()
     } catch (error) {
@@ -239,7 +245,6 @@ const TrandingNow = () => {
     const trandingNowApi = `https://fm.skyhub.pk/api/v1/pages/home/trending-now/add`;
     try {
       const response = await axios.post(trandingNowApi, payload);
-      console.log("send Tranding images response", response.data)
     } catch (error) {
       console.error("error", error);
     }
@@ -274,6 +279,7 @@ const TrandingNow = () => {
         heading={"Tranding Now"}
         buttonText={"Save"}
         sendImagesHomeSlider={handleSaveClick}
+        handeShowInfoModal={handeShowInfoModal}
       />
       <div className='tranding-now-body-top'>
         <div className='tranding-now-body-main-container'>
@@ -437,7 +443,12 @@ const TrandingNow = () => {
         imageSendPayload={imageSendPayload}
         data={mediaDeta}
         setImageSendPayload={setImageSendPayload}
+        editGalleryImageApi={`/api/v1/media/pages/home/trending/`}
       />
+      <InfoPopUp
+                showInfoModal={infoModal}
+                handleCloseInfoModal={handleCloseInfoModal}
+            />
     </div>
   )
 }

@@ -2,8 +2,15 @@ import React, { useState } from 'react'
 import './ShopByCategory.css'
 import CMSHead from '../../UI-Controls/CMSHead/CMSHead';
 import CategoryDropdown from '../../UI-Controls/CategoryDropdown/CategoryDropdown';
+import InfoPopUp from '../../InfoPopUp/InfoPopUp';
 
 const ShopByCategory = () => {
+
+    // All States and variables
+    const [selectedCategories, setSelectedCategories] = useState(['']);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [infoModal, setInfoModal] = useState(false);
+    // Category Dropdown object
     const selectCategoryData = [
         { name: 'None' },
         { name: 'Bedroom' },
@@ -14,9 +21,16 @@ const ShopByCategory = () => {
 
     ]
 
+    // Modal open and close functions
+    const handeShowInfoModal = () => {
+        setInfoModal(true)
+    }
+    const handleCloseInfoModal = () => {
+        setInfoModal(false);
+    }
+
+
     // Multi Select
-    const [selectedCategories, setSelectedCategories] = useState(['']);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const toggleDropdown = (index) => {
         setDropdownOpen((prev) => ({
             ...prev,
@@ -44,6 +58,7 @@ const ShopByCategory = () => {
             <CMSHead
                 heading={'Shop By Category'}
                 buttonText={'Save'}
+                handeShowInfoModal={handeShowInfoModal}
             />
             <div className='CategoryBody'>
                 <p className='category-heading'>Select Category</p>
@@ -63,6 +78,10 @@ const ShopByCategory = () => {
                     </div>
                 </div>
             </div>
+            <InfoPopUp
+                showInfoModal={infoModal}
+                handleCloseInfoModal={handleCloseInfoModal}
+            />
         </div>
     )
 }

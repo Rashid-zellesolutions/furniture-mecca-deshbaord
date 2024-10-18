@@ -1,13 +1,19 @@
 import React from 'react'
 import '../Page.css'
+import HeaderCategories from '../../Components/CategoriesPageComponents/HeaderCategories/HeaderCategories'
+import ShopByCategory from '../../Components/HomePageSections/ShopByCategory/ShopByCategory'
+import BestSellerSection from '../../Components/HomePageSections/BestSellerSection/BestSellerSection'
+import CategoryDescription from '../../Components/CategoriesPageComponents/CategoryDescription/CategoryDescription'
+import EditCategory from '../../Components/CategoriesPageComponents/EditCategory/EditCategory'
 
 const Categories = () => {
   return (
-    <div className="Page">
-      <div className="dashboard-card1">
-        <h2>Welcome to the Categories Page...</h2>
-        <p>Here user can view and manage all website related information efficiently.</p>
-      </div>
+    <div className="HomePage" style={{ gap: '20px' }}>
+      <HeaderCategories />
+      <ShopByCategory />
+      <BestSellerSection />
+      <CategoryDescription />
+      {/* <EditCategory /> */}
     </div>
   )
 }

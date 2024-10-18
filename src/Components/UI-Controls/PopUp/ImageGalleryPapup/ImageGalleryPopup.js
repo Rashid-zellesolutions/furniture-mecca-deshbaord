@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import './ImageGalleryPopup.css'
 import axios from 'axios';
 // utils
-import { uploadImage } from '../../../../Services/functions'
+// import { uploadImage } from '../../../../Services/functions'
 
 // images import
-import checkImage from '../../../../Assets/check-images/New-Jersey-images-1-600x400 1.png';
+// import checkImage from '../../../../Assets/check-images/New-Jersey-images-1-600x400 1.png';
 
 // icons import
 import crossButton from '../../../../Assets/Images/cross-button-32-X-32.png'
@@ -23,16 +23,14 @@ const ImageGalleryPopup = ({
     onImageSelect,
     setImageSendPayload,
     imageSendPayload,
-    alt_text,
-    title,
-    description,
     data,
-    handleFileChange
+    handleFileChange,
+    editGalleryImageApi,
 }) => {
 
     // All States
     const [activeTab, setActiveTab] = useState('upload');
-    const [images, setImages] = useState([]);
+    // const [images, setImages] = useState([]);
     const fileInputRef = useRef(null)
     const [selectedImage, setSelectedImage] = useState([])
     const [selectedImageId, setSelectedImageId] = useState()
@@ -40,13 +38,11 @@ const ImageGalleryPopup = ({
     const [filterOpenIndex, setFilterOpenIndex] = useState(null);
     const [selectedImageIndex, setSelectedImageINdex] = useState(null)
     const [originalValues, setOriginalValues] = useState({});
-    
+
     const handleSelectImageId = (index) => {
         setSelectedImageINdex(index);
         console.log("selected id", index)
     }
-
-    
 
     const handleImageUploadChange = (event) => {
         const { name, value } = event.target;
@@ -54,7 +50,7 @@ const ImageGalleryPopup = ({
             ...prevData,
             [name]: value,
         }))
-        setSelectedImage((prev) => ({...prev, [name]: value}));
+        setSelectedImage((prev) => ({ ...prev, [name]: value }));
     }
 
     const hansChange = () => {
@@ -69,10 +65,10 @@ const ImageGalleryPopup = ({
 
         // Construct the payload
         const payload = {
-            // _id: selectedImage._id,
             alt_text: selectedImage.alt_text,
             title: selectedImage.title,
             description: selectedImage.description,
+            link_url: selectedImage.link_url,
             // Include other properties as necessary
         };
 
@@ -81,15 +77,17 @@ const ImageGalleryPopup = ({
             payload.file = imageSendPayload.file;
         }
 
+        const formData = new FormData();
+        formData.append('alt_text', payload.alt_text);
+        formData.append('title', payload.title)
+        formData.append('description', payload.description);
+        formData.append('link_url', payload.link_url);
+        console.log("payload to update", formData);
+
         try {
-            const response = await axios.put(`${url}/api/v1/media/pages/home/slider/${selectedImage._id}`, payload);
-            // const response = await axios.put(`${url}/api/v1/media/pages/home/slider/${selectedImage._id}`, {
-            //     alt_text: selectedImage.alt_text,
-            //     title: selectedImage.title,
-            //     description: selectedImage.description,
-            // });
+            const response = await axios.put(`${url}${editGalleryImageApi}${selectedImage._id}`, formData);
             console.log("updated Data successfully", response.data);
-            setOriginalValues(({...selectedImage}));
+            setOriginalValues(({ ...selectedImage }));
             setIsEditAble(false);
         } catch (error) {
             console.error('updating failed', error);
@@ -100,11 +98,10 @@ const ImageGalleryPopup = ({
         setSelectedImage(item)
         setSelectedImageId(item._id)
         setOriginalValues({ ...item });
-        // onImageSelect(item);
         console.log("selected image", item)
     };
 
-     useEffect(() => {
+    useEffect(() => {
         if (!showImageGalleryPopUp) {
             setSelectedImage({});
             setOriginalValues({});
@@ -129,7 +126,7 @@ const ImageGalleryPopup = ({
         { label: 'Alternate Text', placeholder: 'Text', val: 'alt_text', name: 'alt_text' },
         { label: 'Title', placeholder: 'Title', val: 'title', name: 'title' },
         { label: 'Description', placeholder: 'Description', val: 'description', name: 'description' },
-        { label: 'Url', placeholder: 'url', val: selectedImage ? selectedImage.image_url : '', }
+        { label: 'Url', placeholder: 'url', val: 'link_url', name: 'link_url' }
     ]
 
     // local functions 
@@ -153,11 +150,10 @@ const ImageGalleryPopup = ({
     }, [showImageGalleryPopUp])
 
     const changeDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const date = new Date(dateString);
-    return date.toLocaleDateString(undefined, options);
-};
-    console.log("selected alt", selectedImage)
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date(dateString);
+        return date.toLocaleDateString(undefined, options);
+    };
 
     return (
         <div
@@ -245,7 +241,7 @@ const ImageGalleryPopup = ({
                                                     key={item._id}
                                                     src={`${url}${item.image_url}`}
                                                     alt={data.alt_text}
-                                                    onClick={() => {handleSelectedImage(item); handleSelectImageId(index)}}
+                                                    onClick={() => { handleSelectedImage(item); handleSelectImageId(index) }}
                                                 />
                                             </div>
                                         ))}
@@ -257,57 +253,57 @@ const ImageGalleryPopup = ({
                                 <div className='images-containt-section'>
                                     {selectedImage && Object.keys(selectedImage).length > 0 ? (
                                         <div className='selected-image-full-details'>
-                                        {/* Selected Image Section */}
-                                        <div className='edit-image-container'>
-                                            {selectedImage && <img src={selectedImage && `${url}${selectedImage.image_url}`} alt='check' />}
-                                        </div>
+                                            {/* Selected Image Section */}
+                                            <div className='edit-image-container'>
+                                                {selectedImage && <img src={selectedImage && `${url}${selectedImage.image_url}`} alt='check' />}
+                                            </div>
 
-                                        {/* Selected image details section */}
-                                        <div className='image-details-section'>
-                                            <h3>{selectedImage && selectedImage.title}</h3>
-                                            {/* <p>{selectedImage && selectedImage.updatedAt}</p> */}
-                                            <p>{selectedImage && changeDate(selectedImage.updatedAt)}</p>
-                                            <p>132 kb</p>
-                                            <p>1400 x 906</p>
-                                        </div>
+                                            {/* Selected image details section */}
+                                            <div className='image-details-section'>
+                                                <h3>{selectedImage && selectedImage.title}</h3>
+                                                {/* <p>{selectedImage && selectedImage.updatedAt}</p> */}
+                                                <p>{selectedImage && changeDate(selectedImage.updatedAt)}</p>
+                                                <p>132 kb</p>
+                                                <p>1400 x 906</p>
+                                            </div>
 
-                                        {/* Gallery Data Edit and Delete section */}
-                                        <div className='edit-and-delete-image-section'>
-                                            <button className='edit-image-button' onClick={handleEditInput}>
-                                                Edit image
-                                            </button>
-                                            <button className='delete-image-button'>
-                                                Delete Image Permanently
-                                            </button>
-                                        </div>
+                                            {/* Gallery Data Edit and Delete section */}
+                                            <div className='edit-and-delete-image-section'>
+                                                <button className='edit-image-button' onClick={handleEditInput}>
+                                                    Edit image
+                                                </button>
+                                                <button className='delete-image-button'>
+                                                    Delete Image Permanently
+                                                </button>
+                                            </div>
 
-                                        {/* Gallery Data input fields */}
-                                        <div className='image-gallery-inputs'>
-                                            {imageEditInputData.map((items, index) => (
-                                                <InputField
-                                                    key={index}
-                                                    labelText={items.label}
-                                                    color={'#595959'}
-                                                    fontSize={'15px'}
-                                                    fontWeight={'600'}
-                                                    lineHeight={'18px'}
-                                                    type={'text'}
-                                                    placeholder={items.placeholder}
-                                                    // value={`${selectedImage}${items.val}`}
-                                                    value={selectedImage ? selectedImage[items.name] : ''}
-                                                    // value={inputValues[items.val]}
-                                                    name={items.name}
-                                                    onChange={handleImageUploadChange}
-                                                    readOnly={!isEditAble}
-                                                />
-                                            ))}
+                                            {/* Gallery Data input fields */}
+                                            <div className='image-gallery-inputs'>
+                                                {imageEditInputData.map((items, index) => (
+                                                    <InputField
+                                                        key={index}
+                                                        labelText={items.label}
+                                                        color={'#595959'}
+                                                        fontSize={'15px'}
+                                                        fontWeight={'600'}
+                                                        lineHeight={'18px'}
+                                                        type={'text'}
+                                                        placeholder={items.placeholder}
+                                                        // value={`${selectedImage}${items.val}`}
+                                                        value={selectedImage ? selectedImage[items.name] : ''}
+                                                        // value={inputValues[items.val]}
+                                                        name={items.name}
+                                                        onChange={handleImageUploadChange}
+                                                        readOnly={!isEditAble}
+                                                    />
+                                                ))}
+                                            </div>
+                                            {isEditAble && (
+                                                <button className='update-image-button' onClick={handleUpdate}>
+                                                    Update
+                                                </button>
+                                            )}
                                         </div>
-                                        {isEditAble && (
-                                            <button className='update-image-button' onClick={handleUpdate}>
-                                                Update
-                                            </button>
-                                        )}
-                                    </div>
                                     ) : null}
                                 </div>
 

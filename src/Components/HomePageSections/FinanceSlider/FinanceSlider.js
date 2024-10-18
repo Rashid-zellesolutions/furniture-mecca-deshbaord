@@ -30,7 +30,7 @@ const FinanceSlider = () => {
     description: '',
     link_url: '',
   });
-
+// Modal open and close functions
   const handleModalOpen = () => {
     setModalView(true);
   };
@@ -38,12 +38,18 @@ const FinanceSlider = () => {
   const handleModalClose = () => {
     setModalView(false);
   };
+  
+    const handeShowInfoModal = () => {
+        setInfoModal(true)
+    }
+    const handleCloseInfoModal = () => {
+        setInfoModal(false);
+    }
 
   // Get Finance Slider Media api
   const getApi = async () => {
     try {
       const response = await axios.get(`${url}/api/v1/media/pages/home/finance/get`)
-      console.log("finance media get response", response.data)
       setData(response.data.homeFinanceSliders)
     } catch (error) {
       console.error(error);
@@ -51,7 +57,7 @@ const FinanceSlider = () => {
   }
   useEffect(() => {
     getApi();
-  }, []);
+  }, [data]);
 
   // Get images for finance slider
   const getHomeSliderImagesFromApi = async () => {
@@ -101,7 +107,6 @@ const FinanceSlider = () => {
       await uploadImage(imagePayloadToSend, api, setUploadedStates)
 
     }
-    console.log("handleChange file", file);
   }
 
 
@@ -174,7 +179,7 @@ const FinanceSlider = () => {
       uid: image._id,
     }));
 
-    console.log("Sending images to API:", JSON.stringify(updatedImages, null, 2)); // Log the payload
+    // console.log("Sending images to API:", JSON.stringify(updatedImages, null, 2)); 
 
     try {
       const response = await axios.post('https://fm.skyhub.pk/api/v1/pages/home/finance-slider/add-bulk', updatedImages, {
@@ -183,7 +188,7 @@ const FinanceSlider = () => {
         },
       });
 
-      console.log("Response from API:", response.data); // Log the API response
+      // console.log("Response from API:", response.data); 
       return response.data; // Return the response data if needed
     } catch (error) {
       console.error("Error sending images to API:", error); // Log any errors
@@ -199,7 +204,7 @@ const FinanceSlider = () => {
         heading={'Finance Slider'}
         buttonText={'Save'}
         sendImagesHomeSlider={sendImagesHomeSlider}
-        handleShowInfoModal={() => setInfoModal(true)}
+        handeShowInfoModal={handeShowInfoModal}
       />
       <CMSBody
         bodyText={'Upload Image'}
@@ -218,10 +223,11 @@ const FinanceSlider = () => {
         title={imageSendPayload.title}
         data={data}
         handleFileChange={handleFileChange}
+        editGalleryImageApi={`/api/v1/media/pages/home/finance/`}
       />
       <InfoPopUp
         showInfoModal={infoModal}
-        handleCloseInfoModal={() => setInfoModal(false)}
+        handleCloseInfoModal={handleCloseInfoModal}
       />
     </div>
   );

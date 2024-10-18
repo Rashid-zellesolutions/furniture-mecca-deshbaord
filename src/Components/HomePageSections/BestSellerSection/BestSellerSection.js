@@ -5,6 +5,7 @@ import arrowDown from '../../../Assets/Images/dropdown 20 x 20.png';
 import uploadImageIcon from '../../../Assets/Images/uploadImg 48 x 48.png'
 import CategoryDropdown from '../../UI-Controls/CategoryDropdown/CategoryDropdown';
 import ImageGalleryPopup from '../../UI-Controls/PopUp/ImageGalleryPapup/ImageGalleryPopup';
+import InfoPopUp from '../../InfoPopUp/InfoPopUp';
 
 const BestSellerSection = () => {
 
@@ -13,9 +14,18 @@ const BestSellerSection = () => {
   const [selectedImage, setSelectedImage] = useState([])
   const [inputTitle, setInputTitle] = useState('');
   const [combinedData, setCombinedData] = useState([]);
+  const [infoModal, setInfoModal] = useState(false);
 
 
   const handleCategoryDropDown = () => { setShowCategory(!showCategory) }
+
+  // Modal open and close functions
+    const handeShowInfoModal = () => {
+        setInfoModal(true)
+    }
+    const handleCloseInfoModal = () => {
+        setInfoModal(false);
+    }
 
 
   const selectCategoryData = [
@@ -88,6 +98,7 @@ const BestSellerSection = () => {
       <CMSHead
         heading={"Best Seller"}
         buttonText={"Save"}
+        handeShowInfoModal={handeShowInfoModal}
       />
       <div className='best-seller-category'>
         <div className='best-seller-inner-section'>
@@ -133,6 +144,10 @@ const BestSellerSection = () => {
         handleModalView={handleModalClose}
         onImageSelect={handleImageSelect}
       />
+      <InfoPopUp
+                showInfoModal={infoModal}
+                handleCloseInfoModal={handleCloseInfoModal}
+            />
     </div>
   )
 }

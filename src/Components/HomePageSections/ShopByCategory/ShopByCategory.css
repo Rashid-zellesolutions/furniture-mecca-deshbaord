@@ -70,7 +70,7 @@
 .category-fropdown-and-button{
     display: flex;
     flex-direction: column;
-    width: 420px;
+    width: 320px;
     box-sizing: border-box;
     gap: 10px;
 }
@@ -92,7 +92,7 @@
 
 .add-category-btn-div{
     display: flex;
-    width: 76%;
+    width: 100%;
     align-items: center;
     justify-content: end;
 }

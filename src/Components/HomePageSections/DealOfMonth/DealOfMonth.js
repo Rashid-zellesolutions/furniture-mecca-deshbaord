@@ -2,11 +2,22 @@ import React, {useRef, useState} from 'react'
 import './DealOfMonth.css'
 import CMSHead from '../../UI-Controls/CMSHead/CMSHead'
 import timeIcon from '../../../Assets/Images/time-icon.png';
+import InfoPopUp from '../../InfoPopUp/InfoPopUp';
 
 
 const DealOfMonth = () => {
   const timePickerRef = useRef(null)
    const [showDatePicker, setShowDatePicker] = useState(false);
+   const [infoModal, setInfoModal] = useState(false);
+
+   // Modal open and close functions
+    const handeShowInfoModal = () => {
+        setInfoModal(true)
+    }
+    const handleCloseInfoModal = () => {
+        setInfoModal(false);
+    }
+
   const handleTimeClick = () => {
     setShowDatePicker(prev => !prev); // Toggle time picker visibility
     if (showDatePicker && timePickerRef.current) {
@@ -19,6 +30,7 @@ const DealOfMonth = () => {
       <CMSHead 
             heading={"Deal Of The Month"}
             buttonText={"Save"}
+            handeShowInfoModal={handeShowInfoModal}
         />
         <div className='deal-of-the-month-main-container'>
             <div className='deal-of-the-month-inputs'>
@@ -33,7 +45,10 @@ const DealOfMonth = () => {
                 </div>
             </div>
         </div>
-        
+        <InfoPopUp
+                showInfoModal={infoModal}
+                handleCloseInfoModal={handleCloseInfoModal}
+            />
     </div>
   )
 }
