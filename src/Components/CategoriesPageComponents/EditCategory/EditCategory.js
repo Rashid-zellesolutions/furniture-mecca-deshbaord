@@ -1,121 +1,127 @@
 import React from 'react';
 import '../../../Pages/ECommerce/ECommerce.css';
 // import '../../../Page.css';
+import './EditCategory.css';
 import 'react-accessible-accordion/dist/fancy-example.css'; // Default styles
 import DataTable from 'react-data-table-component';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import actionIcon from '../../../Assets/Images/ActionBtn 30 x 30.png'
+import editIcon from '../../../Assets/Images/edit.png'
+import deleteIcon from '../../../Assets/Images/delete-black.png';
+import documentIcon from '../../../Assets/Images/document.png'
+import eyeIcon from '../../../Assets/Images/eye-black.png'
+import crossBtn from '../../../Assets/Images/cross-button-32-X-32.png'
+import { Link } from 'ckeditor5';
+import arrowDown from '../../../Assets/Images/dropdown 20 x 20.png'
 
 const EditCategory = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showAction, setShowAction] = useState(false)
+  const [currentId, setCurrentId] = useState(null)
+  const [showQuickEdit, setShowQuickEdit] = useState(null)
+  const [quickParentDropdown, setQuickParentDropdown] = useState(false)
+  const [quickAuthorDropdown, setQuickAuthorDropdown] = useState(false)
+  const [quickStatusDropdown, setQuickStatusDropdown] = useState(false)
+  
+  const handleShowAction = (id) => {
+    setShowAction((prev) => (prev === id ? null : id));
+    setCurrentId(id);
+  }
 
- 
+  const handleQuickEdit = (id) => {
+    setShowQuickEdit((prev) => (prev === id ? null : id))
+    // setCurrentId(id)
+  }
+
+  const handleQuickEditClose = () => {
+    setShowQuickEdit(null)
+  }
+
+  const handleParentCategoryDropdown = () => {
+    setQuickParentDropdown(!quickParentDropdown)
+  }
+  const handleAuthorDropdown = () => {
+    setQuickAuthorDropdown(!quickAuthorDropdown)
+  }
+  const handleStatusDropdown = () => {
+    setQuickStatusDropdown(!quickStatusDropdown)
+  }
+  const actionStates = [
+    {name: 'Edit', icon: editIcon, Link: '#'},
+    {name: 'Quick Edit', icon: editIcon, Link: '#', onclick:  handleQuickEdit},
+    {name: 'Delete', icon: deleteIcon, Link: '#'},
+    {name: 'View', icon: eyeIcon, Link: '#'},
+    {name: 'Duplicate', icon: documentIcon, Link: '#'},
+  ]
+
+
+
 
   useEffect(() => {
     // Set static data instead of fetching from API
     const staticData = [
       {
         id: 1,
-        name: 'Leanne Graham',
-        status: 'Published',
-        image: '', // Example image URL
-        address: { zipcode: '12345', city: 'Gwenborough', street: 'Kulas Light' },
-        username: 'In-Stock',
-        price: 100.00,
-        email: 'user1@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
       {
         id: 2,
-        name: 'Ervin Howell',
-        status: 'Drafted',
-        image: '',
-        address: { zipcode: '12346', city: 'Romaguera', street: 'Victor Plains' },
-        username: 'Out of Stock',
-        price: 200.00,
-        email: 'user2@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
       {
         id: 3,
-        name: 'Clementine Bauch',
-        status: 'Published',
-        image: '',
-        address: { zipcode: '12347', city: 'Lebsackbury', street: 'Douglas Extension' },
-        username: 'In-Stock',
-        price: 300.00,
-        email: 'user3@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
       {
         id: 4,
-        name: 'Patricia Lebsack',
-        status: 'Drafted',
-        image: '',
-        address: { zipcode: '12348', city: 'South Elvis', street: 'Hoeger Mall' },
-        username: 'Back Order',
-        price: 400.00,
-        email: 'user4@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
       {
         id: 5,
-        name: 'Chelsey Dietrich',
-        status: 'Published',
-        image: '',
-        address: { zipcode: '12349', city: 'Roscoeview', street: 'Skiles Walks' },
-        username: 'In-Stock',
-        price: 150.00,
-        email: 'user5@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
       {
         id: 6,
-        name: 'Mrs. Dennis Schulist',
-        status: 'Drafted',
-        image: '',
-        address: { zipcode: '12350', city: 'Lehman', street: 'Norberto Crossing' },
-        username: 'Back Order',
-        price: 250.00,
-        email: 'user6@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
       {
         id: 7,
-        name: 'Kurtis Weissnat',
-        status: 'Published',
-        image: '',
-        address: { zipcode: '12351', city: 'Howemouth', street: 'Rex Trail' },
-        username: 'In-Stock',
-        price: 350.00,
-        email: 'user7@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
       {
         id: 8,
-        name: 'Nicholas Runolfsdottir V',
-        status: 'Drafted',
-        image: '',
-        address: { zipcode: '12352', city: 'Aliyaview', street: 'Ellsworth Summit' },
-        username: 'Back Order',
-        price: 450.00,
-        email: 'user8@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
       {
         id: 9,
-        name: 'Glenna Reichert',
-        status: 'Published',
-        image: '',
-        address: { zipcode: '12353', city: 'Bartholomebury', street: 'Dayna Park' },
-        username: 'In-Stock',
-        price: 550.00,
-        email: 'user9@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
       {
         id: 10,
-        name: 'Clementina DuBuque',
-        status: 'Drafted',
-        image: '',
-        address: { zipcode: '12354', city: 'Lebsackbury', street: 'Kovacek Fields' },
-        username: 'Back Order',
-        price: 650.00,
-        email: 'user10@example.com',
+        title: 'Living Room',
+        author: 'Rashid.Zelle-Solutions',
+        date: 'Published 10/10/2024 at 1: 36 PM',
       },
     ];
 
@@ -176,28 +182,43 @@ const EditCategory = () => {
       button: true,
     },
     {
-      name: 'Image',
-      selector: (row) => row.image,
+      name: 'Title',
+      selector: (row) => row.title,
     },
     {
-      name: 'Image',
-      selector: (row) => row.image,
+      name: 'Author',
+      selector: (row) => row.author,
     },
     {
-      name: 'Name',
-      selector: (row) => row.name,
+      name: 'Date',
+      selector: (row) => row.date,
     },
     {
       name: 'Action',
       cell: (row) => (
-        <img
-          src={actionIcon}
-          alt="Action Icon"
-          width="30"
-          height="30"
-          style={{ cursor: 'pointer' }}
-          onClick={() => console.log('Action clicked for:', row)}
-        />
+        <div className='action-bar-main-section'>
+          <img
+            src={actionIcon}
+            alt="Action Icon"
+            width="30"
+            height="30"
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleShowAction(row.id)}
+          />
+          <div className={`action-select ${showAction === row.id ? 'show-action' : ''}`}>
+            {actionStates.map((items, index) => (
+              <div 
+                
+                key={index} 
+                className='action-single-action-spacify'
+                onClick={() => items.onclick(row.id)}
+              >
+              <img src={items.icon} alt='edit' />
+              <p>{items.name}</p>
+            </div>
+            ))}
+          </div>
+        </div>
       ),
     },
   ];
@@ -205,10 +226,92 @@ const EditCategory = () => {
   return (
     <div className="AllProductPage">
 
-      
+
 
       <div className="sectionall_3">
         <DataTable columns={columns} data={data} progressPending={loading} customStyles={customStyles} />
+      </div>
+      <div className={`quick-edit-modal-main-div ${showQuickEdit === currentId ? 'show-quick-edit' : ''}`}>
+        <div className='quick-view-inner-section'>
+          <div className='quick-edit-head'>
+              <h3>Quick Edit</h3>
+              <button className='quick-edit-close-btn'>
+                <img src={crossBtn} alt='cross-btn' onClick={handleQuickEditClose} />
+              </button>
+          </div>
+          <div className='quick-edit-body'>
+              <div className='quick-input-inputs'>
+                <div className='quick-edit-title-and-input'>
+                  <p>Title</p>
+                  <input type='text' placeholder='Dining Room' />
+                </div>
+                <div className='quick-edit-title-and-input'>
+                  <p>Slug</p>
+                  <input type='text' placeholder='dining-room' />
+                </div>
+                <div className='quick-edit-title-and-input'>
+                  <p>Parent Category</p>
+                  <div className='quick-view-select'>
+                    <div className='quick-view-select-click' onClick={handleParentCategoryDropdown}>
+                      <p>Select Parent</p>
+                      <img src={arrowDown} alt='arrow-down' />
+                    </div>
+                    <div className={`quick-view-select-click-dropdown ${quickParentDropdown ? 'show-quick-view-select-click-dropdown' : ''}`}>
+                      <div className='quick-view-dropdown-inner'>
+                        <p>Living Room</p>
+                        <p>Dining Room</p>
+                        <p>Bedroom</p>
+                        <p>Kids Room</p>
+                        <p>Small Spaces</p>
+                        <p>Rugs</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='quick-edit-title-and-input'>
+                  <p>Author</p>
+                  <div className='quick-view-select'>
+                    <div className='quick-view-select-click' onClick={handleAuthorDropdown}>
+                      <p>Author</p>
+                      <img src={arrowDown} alt='arrow-down' />
+                    </div>
+                    <div className={`quick-view-select-click-dropdown ${quickAuthorDropdown ? 'show-quick-view-select-click-dropdown' : ''}`}>
+                      <div className='quick-view-dropdown-inner'>
+                        <p>Osama.admin</p>
+                        <p>Noman.Zelle</p>
+                        <p>Muzafar Shah</p>
+                        <p>Rashid.Zelle</p>
+                        <p>Abdul Sami.Zelle</p>
+                        <p>M.Faraz.Zelle</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='quick-edit-title-and-input'>
+                  <p>Status</p>
+                  <div className='quick-view-select'>
+                    <div className='quick-view-select-click' onClick={handleStatusDropdown}>
+                      <p>Status</p>
+                      <img src={arrowDown} alt='arrow-down' />
+                    </div>
+                    <div className={`quick-view-select-click-dropdown ${quickStatusDropdown ? 'show-quick-view-select-click-dropdown' : ''}`}>
+                      <div className='quick-view-dropdown-inner'>
+                        <p>Osama.admin</p>
+                        <p>Noman.Zelle</p>
+                        <p>Muzafar Shah</p>
+                        <p>Rashid.Zelle</p>
+                        <p>Abdul Sami.Zelle</p>
+                        <p>M.Faraz.Zelle</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='quick-edit-button'>
+                  button
+              </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -9,11 +9,11 @@ import EditCategory from '../../Components/CategoriesPageComponents/EditCategory
 const Categories = () => {
   return (
     <div className="HomePage" style={{ gap: '20px' }}>
-      <HeaderCategories />
+      {/* <HeaderCategories />
       <ShopByCategory />
       <BestSellerSection />
-      <CategoryDescription />
-      {/* <EditCategory /> */}
+      <CategoryDescription /> */}
+      <EditCategory />
     </div>
   )
 }
