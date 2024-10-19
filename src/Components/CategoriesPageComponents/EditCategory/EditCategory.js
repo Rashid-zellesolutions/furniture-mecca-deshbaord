@@ -5,39 +5,55 @@ import './EditCategory.css';
 import 'react-accessible-accordion/dist/fancy-example.css'; // Default styles
 import DataTable from 'react-data-table-component';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import actionIcon from '../../../Assets/Images/ActionBtn 30 x 30.png'
 import editIcon from '../../../Assets/Images/edit.png'
 import deleteIcon from '../../../Assets/Images/delete-black.png';
 import documentIcon from '../../../Assets/Images/document.png'
 import eyeIcon from '../../../Assets/Images/eye-black.png'
 import crossBtn from '../../../Assets/Images/cross-button-32-X-32.png'
-import { Link } from 'ckeditor5';
 import arrowDown from '../../../Assets/Images/dropdown 20 x 20.png'
 
 const EditCategory = () => {
   const navigate = useNavigate();
+  const location = useLocation()
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAction, setShowAction] = useState(false)
   const [currentId, setCurrentId] = useState(null)
-  const [showQuickEdit, setShowQuickEdit] = useState(null)
+  const [showQuickEdit, setShowQuickEdit] = useState(false)
   const [quickParentDropdown, setQuickParentDropdown] = useState(false)
   const [quickAuthorDropdown, setQuickAuthorDropdown] = useState(false)
   const [quickStatusDropdown, setQuickStatusDropdown] = useState(false)
+  const [navSlug, setNAvSlug] = useState()
+
+  // navigate()
+  const currentLocation = location.pathname
   
-  const handleShowAction = (id) => {
+
+  const handleShowAction = (title, id) => {
     setShowAction((prev) => (prev === id ? null : id));
     setCurrentId(id);
+    const linkSlug = title.toLowerCase().replace(/\s+/g, '-');
+    console.log("row Data", linkSlug)
+    setNAvSlug(linkSlug)
   }
 
-  const handleQuickEdit = (id) => {
-    setShowQuickEdit((prev) => (prev === id ? null : id))
-    // setCurrentId(id)
+  const redirectToEditFullSection = () => {
+    navigate(`/Pages/Categories/${navSlug}`)
+    console.log("navigate", navigate)
+  }
+  
+
+  const handleQuickEdit = () => {
+    setShowQuickEdit(true)
+    console.log(showQuickEdit)
+    console.log("clicked")
   }
 
   const handleQuickEditClose = () => {
-    setShowQuickEdit(null)
+    setShowQuickEdit(false)
+    console.log("quick edit show", showQuickEdit)
   }
 
   const handleParentCategoryDropdown = () => {
@@ -50,11 +66,11 @@ const EditCategory = () => {
     setQuickStatusDropdown(!quickStatusDropdown)
   }
   const actionStates = [
-    {name: 'Edit', icon: editIcon, Link: '#'},
-    {name: 'Quick Edit', icon: editIcon, Link: '#', onclick:  handleQuickEdit},
-    {name: 'Delete', icon: deleteIcon, Link: '#'},
-    {name: 'View', icon: eyeIcon, Link: '#'},
-    {name: 'Duplicate', icon: documentIcon, Link: '#'},
+    { name: 'Edit', icon: editIcon, Link: '#', onclick: redirectToEditFullSection },
+    { name: 'Quick Edit', icon: editIcon, Link: '#', onclick: handleQuickEdit },
+    { name: 'Delete', icon: deleteIcon, Link: '#' },
+    { name: 'View', icon: eyeIcon, Link: '#' },
+    { name: 'Duplicate', icon: documentIcon, Link: '#' },
   ]
 
 
@@ -203,19 +219,19 @@ const EditCategory = () => {
             width="30"
             height="30"
             style={{ cursor: 'pointer' }}
-            onClick={() => handleShowAction(row.id)}
+            onClick={() => handleShowAction(row.title, row.id)}
           />
           <div className={`action-select ${showAction === row.id ? 'show-action' : ''}`}>
             {actionStates.map((items, index) => (
-              <div 
-                
-                key={index} 
+              <div
+
+                key={index}
                 className='action-single-action-spacify'
-                onClick={() => items.onclick(row.id)}
+                onClick={items.onclick}
               >
-              <img src={items.icon} alt='edit' />
-              <p>{items.name}</p>
-            </div>
+                <img src={items.icon} alt='edit' />
+                <p>{items.name}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -231,85 +247,87 @@ const EditCategory = () => {
       <div className="sectionall_3">
         <DataTable columns={columns} data={data} progressPending={loading} customStyles={customStyles} />
       </div>
-      <div className={`quick-edit-modal-main-div ${showQuickEdit === currentId ? 'show-quick-edit' : ''}`}>
+      <div className={`quick-edit-modal-main-div ${showQuickEdit ? 'show-quick-edit-modal' : ''}`}>
         <div className='quick-view-inner-section'>
           <div className='quick-edit-head'>
-              <h3>Quick Edit</h3>
-              <button className='quick-edit-close-btn'>
-                <img src={crossBtn} alt='cross-btn' onClick={handleQuickEditClose} />
-              </button>
+            <h3>Quick Edit</h3>
+            <button className='quick-edit-close-btn'>
+              <img src={crossBtn} alt='cross-btn' onClick={handleQuickEditClose} />
+            </button>
           </div>
           <div className='quick-edit-body'>
-              <div className='quick-input-inputs'>
-                <div className='quick-edit-title-and-input'>
-                  <p>Title</p>
-                  <input type='text' placeholder='Dining Room' />
-                </div>
-                <div className='quick-edit-title-and-input'>
-                  <p>Slug</p>
-                  <input type='text' placeholder='dining-room' />
-                </div>
-                <div className='quick-edit-title-and-input'>
-                  <p>Parent Category</p>
-                  <div className='quick-view-select'>
-                    <div className='quick-view-select-click' onClick={handleParentCategoryDropdown}>
-                      <p>Select Parent</p>
-                      <img src={arrowDown} alt='arrow-down' />
-                    </div>
-                    <div className={`quick-view-select-click-dropdown ${quickParentDropdown ? 'show-quick-view-select-click-dropdown' : ''}`}>
-                      <div className='quick-view-dropdown-inner'>
-                        <p>Living Room</p>
-                        <p>Dining Room</p>
-                        <p>Bedroom</p>
-                        <p>Kids Room</p>
-                        <p>Small Spaces</p>
-                        <p>Rugs</p>
-                      </div>
-                    </div>
+            <div className='quick-input-inputs'>
+              <div className='quick-edit-title-and-input'>
+                <p>Title</p>
+                <input type='text' placeholder='Dining Room' />
+              </div>
+              <div className='quick-edit-title-and-input'>
+                <p>Slug</p>
+                <input type='text' placeholder='dining-room' />
+              </div>
+              <div className='quick-edit-title-and-input'>
+                <p>Parent Category</p>
+                <div className='quick-view-select'>
+                  <div className='quick-view-select-click' onClick={handleParentCategoryDropdown}>
+                    <p>Select Parent</p>
+                    <img src={arrowDown} alt='arrow-down' />
                   </div>
-                </div>
-                <div className='quick-edit-title-and-input'>
-                  <p>Author</p>
-                  <div className='quick-view-select'>
-                    <div className='quick-view-select-click' onClick={handleAuthorDropdown}>
-                      <p>Author</p>
-                      <img src={arrowDown} alt='arrow-down' />
-                    </div>
-                    <div className={`quick-view-select-click-dropdown ${quickAuthorDropdown ? 'show-quick-view-select-click-dropdown' : ''}`}>
-                      <div className='quick-view-dropdown-inner'>
-                        <p>Osama.admin</p>
-                        <p>Noman.Zelle</p>
-                        <p>Muzafar Shah</p>
-                        <p>Rashid.Zelle</p>
-                        <p>Abdul Sami.Zelle</p>
-                        <p>M.Faraz.Zelle</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='quick-edit-title-and-input'>
-                  <p>Status</p>
-                  <div className='quick-view-select'>
-                    <div className='quick-view-select-click' onClick={handleStatusDropdown}>
-                      <p>Status</p>
-                      <img src={arrowDown} alt='arrow-down' />
-                    </div>
-                    <div className={`quick-view-select-click-dropdown ${quickStatusDropdown ? 'show-quick-view-select-click-dropdown' : ''}`}>
-                      <div className='quick-view-dropdown-inner'>
-                        <p>Osama.admin</p>
-                        <p>Noman.Zelle</p>
-                        <p>Muzafar Shah</p>
-                        <p>Rashid.Zelle</p>
-                        <p>Abdul Sami.Zelle</p>
-                        <p>M.Faraz.Zelle</p>
-                      </div>
+                  <div className={`quick-view-select-click-dropdown ${quickParentDropdown ? 'show-quick-view-select-click-dropdown' : ''}`}>
+                    <div className='quick-view-dropdown-inner'>
+                      <p>Living Room</p>
+                      <p>Dining Room</p>
+                      <p>Bedroom</p>
+                      <p>Kids Room</p>
+                      <p>Small Spaces</p>
+                      <p>Rugs</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className='quick-edit-button'>
-                  button
+              <div className='quick-edit-title-and-input'>
+                <p>Author</p>
+                <div className='quick-view-select'>
+                  <div className='quick-view-select-click' onClick={handleAuthorDropdown}>
+                    <p>Author</p>
+                    <img src={arrowDown} alt='arrow-down' />
+                  </div>
+                  <div className={`quick-view-select-click-dropdown ${quickAuthorDropdown ? 'show-quick-view-select-click-dropdown' : ''}`}>
+                    <div className='quick-view-dropdown-inner'>
+                      <p>Osama.admin</p>
+                      <p>Noman.Zelle</p>
+                      <p>Muzafar Shah</p>
+                      <p>Rashid.Zelle</p>
+                      <p>Abdul Sami.Zelle</p>
+                      <p>M.Faraz.Zelle</p>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <div className='quick-edit-title-and-input'>
+                <p>Status</p>
+                <div className='quick-view-select'>
+                  <div className='quick-view-select-click' onClick={handleStatusDropdown}>
+                    <p>Status</p>
+                    <img src={arrowDown} alt='arrow-down' />
+                  </div>
+                  <div className={`quick-view-select-click-dropdown ${quickStatusDropdown ? 'show-quick-view-select-click-dropdown' : ''}`}>
+                    <div className='quick-view-dropdown-inner'>
+                      <p>Osama.admin</p>
+                      <p>Noman.Zelle</p>
+                      <p>Muzafar Shah</p>
+                      <p>Rashid.Zelle</p>
+                      <p>Abdul Sami.Zelle</p>
+                      <p>M.Faraz.Zelle</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='quick-edit-button'>
+              <button>
+                Save
+              </button>
+            </div>
           </div>
         </div>
       </div>

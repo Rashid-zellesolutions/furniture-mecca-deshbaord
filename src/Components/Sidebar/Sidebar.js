@@ -40,6 +40,7 @@ const eComAttributes = [
   { name: 'Product Categories', path: '/E-Commerce/Product-Categories' },
   { name: 'Product Tags', path: '/E-Commerce/Product-Tags' },
   { name: 'Product Attributes', path: '/E-Commerce/Product-Attributes' },
+  {name: 'Home', path: '/Pages/Home'}
 ];
 
 const pagesAttributes = [

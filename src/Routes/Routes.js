@@ -43,6 +43,8 @@ import InActiveTags from '../Pages/PriceTags/InActiveTags';
 import GoogleCampaigns from '../Pages/GoogleAds/GoogleCampaigns';
 import AdsPerformance from '../Pages/GoogleAds/AdsPerformance';
 import { components } from 'react-select';
+import CategoryEdit from '../Pages/Page/CategoryEdit';
+import EditSingleCategory from '../Components/CategoriesPageComponents/EditSingleCategory/EditSingleCategory';
 
 // Import other components...
 
@@ -52,6 +54,7 @@ const routes = [
   { path: '/Pages/About', component: AboutPage, protected: false, },
   { path: '/Pages/Home', component: HomePage, protected: true, },
   {path: '/Pages/Categories', component: Categories, protected: true},
+  {path: '/Pages/Categories/:slug', component: EditSingleCategory, protected: true},
   {path: '/Pages/Product-Archive', component: ProductArchive, protected: true},
   {path: '/Pages/Single-Product', component: SingleProduct, protected: true},
   {path: '/Pages/Financing', component: Financing, protected: true},
